@@ -205,6 +205,5 @@ function respondToMessage(message, response) {
     message.channel.sendMessage(response);
 }
 
-client.login('penisanal');
 
 client.login('Kage er gud'); //Prod
