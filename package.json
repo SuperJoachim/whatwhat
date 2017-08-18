@@ -1,0 +1,21 @@
+{
+  "name": "baegl",
+  "version": "1.0.0",
+  "description": "Yeah",
+  "main": "run.js",
+  "dependencies": {
+    "discord.js": "^9.0.2",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Discord",
+    "bot",
+    "quote"
+  ],
+  "author": "Bubber",
+  "license": "ISC"
+}
