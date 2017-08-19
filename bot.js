@@ -3,10 +3,18 @@ const client = new Discord.Client();
 var fs = require('fs');
 var guid = require('guid');
 var os = require("os");
+var path = require("path");
 var request = require('request');
 const download = require('download');
 var prac = require('./prac/prac.js');
 var _ = require('lodash');
+var Botbillder_dir = path.join(__dirname,"Botbilleder/")
+var babesfile = path.join(__dirname,"babes.txt")
+var lastshownfile = path.join(__dirname,"lastshown.txt")
+
+if (!fs.existsSync(Botbillder_dir)){
+  fs.mkdirSync(Botbillder_dir)
+}
 
 client.on('ready', () => {
   console.log('I am ready!');
@@ -51,9 +59,9 @@ client.on('message', message => {
 client.on('message', message => {
   if(message.content.toLowerCase() === "wow?") {
 
-    var babe = fs.readFileSync("lastshown.txt");
+    var babe = fs.readFileSync(lastshownfile);
     var textToAppend = babe + "\r\n";
-    fs.appendFile("babes.txt", textToAppend);
+    fs.appendFile(babesfile, textToAppend);
     message.channel.send("Tilføjet!");
   }
 });
@@ -61,8 +69,7 @@ client.on('message', message => {
 //wuhu
 client.on('message', message => {
   if(message.content.toLowerCase() === "wuhu") {
-    var babes = fs.readFileSync('babes.txt').toString().split("\r\n");
-    //console.log(array[1].toString());
+    var babes = fs.readFileSync((babesfile)).toString().split("\r\n");
     var babeRandom = Math.floor(Math.random() * (babes.length));
       var billede = babes[babeRandom];
       console.log(billede + ' sendt som wuhu');
@@ -80,7 +87,7 @@ client.on('message', message => {
       console.log("JPG billede bliver tilføjet nu!")
       
       var billedenavn = guid.create().value + ".jpg";
-      var localPath = 'C:\\BotBilleder\\' + billedenavn;
+      var localPath = Botbillder_dir + billedenavn;
             var url = message.content;
             console.log(url);
 
@@ -93,7 +100,7 @@ client.on('message', message => {
       console.log("JPEG billede bliver tilføjet nu!")
       
       var billedenavn = guid.create().value + ".jpeg";
-      var localPath = 'C:\BotBilleder\\' + billedenavn;
+      var localPath = Botbillder_dir + billedenavn;
             var url = message.content;
             console.log(url);
 
@@ -106,7 +113,7 @@ client.on('message', message => {
       console.log("GIF billede bliver tilføjet nu!")
       
       var billedenavn = guid.create().value + ".gif";
-      var localPath = 'C:\BotBilleder\\' + billedenavn;
+      var localPath = Botbillder_dir + billedenavn;
             var url = message.content;
             console.log(url);
 
@@ -119,7 +126,7 @@ client.on('message', message => {
       console.log("BMP billede bliver tilføjet nu!")
       
       var billedenavn = guid.create().value + ".bmp";
-      var localPath = 'C:\BotBilleder\\' + billedenavn;
+      var localPath = Botbillder_dir + billedenavn;
             var url = message.content;
             console.log(url);
 
@@ -132,7 +139,7 @@ client.on('message', message => {
       console.log("PNG billede bliver tilføjet nu!")
       
       var billedenavn = guid.create().value + ".png";
-      var localPath = 'C:\BotBilleder\\' + billedenavn;
+      var localPath = Botbillder_dir + billedenavn;
             var url = message.content;
             console.log(url);
 
@@ -141,7 +148,7 @@ client.on('message', message => {
               });
     }
 
-    message.channel.send("Billede uploadet");
+    message.channel.reply("Billede uploadet");
   }
     
 });
@@ -152,14 +159,12 @@ client.on('message', message => {
 //whaat?
 client.on('message', message => {
   if(message.content.toLowerCase() === "whaat?") {
-    var path ='c:\\BotBilleder';
- 
-  fs.readdir(path, function(err, items) {
+  fs.readdir(Botbillder_dir, function(err, items) {
         var billedeRandom = Math.floor(Math.random() * (items.length - 0 + 1));
         var billedeToSend = items[billedeRandom];
         console.log(billedeToSend + ' er sendt');
-        message.channel.sendFile(path + '/' + billedeToSend);
-        fs.writeFile("lastshown.txt", path + '/' + billedeToSend);
+        message.channel.sendFile(Botbillder_dir + billedeToSend);
+        fs.writeFile(lastshownfile, Botbillder_dir  + billedeToSend);
   });
 
   }

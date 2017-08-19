@@ -5,7 +5,9 @@
   "main": "run.js",
   "dependencies": {
     "discord.js": "^9.0.2",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "request": "^2.81.0",
+    "download": "^6.2.5"
   },
   "devDependencies": {},
   "scripts": {
