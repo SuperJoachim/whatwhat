@@ -18,6 +18,7 @@ if (!fs.existsSync(Botbillder_dir)){
 
 client.on('ready', () => {
   console.log('I am ready!');
+  client.user.setGame("with little girls");
 });
 //What what
 client.on('message', message => {
