@@ -11,6 +11,7 @@ var     path            = require('path');
 var     uuid            = require('uuid/v1');
 var     request         = require('request');
 var     prac            = require('./prac/prac.js');
+var     rime            = require('./rime/rime.js');
 var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
 
@@ -46,6 +47,29 @@ client.on('message', message => {
     }
 
     var messageContent = message.content.trim().toLowerCase();
+
+    // !rime
+    if (messageContent === '!rime') {
+        var randomRime = rime.getRandomRime();
+
+        respondToMessage(message, randomRime.author + ':');
+        respondToMessageTTS(message, randomRime.rime);
+        return;
+    }
+
+    // !addrime
+    if (messageContent.indexOf('!addrime') > -1) {
+        var newRime = messageContent.replace('!addrime', '').trim();
+
+        if (!newRime) {
+            respondToMessage(message, 'Daym - no rime, no dime..');
+            return;
+        }
+
+        respondToMessage(message, rime.addRime(message.author, newRime));
+
+        return;
+    }
 
     // !prac
     if (messageContent.indexOf('!prac') > -1) {
