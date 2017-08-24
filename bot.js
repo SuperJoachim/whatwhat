@@ -1,189 +1,48 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
-var fs = require('fs');
-var guid = require('guid');
-var os = require("os");
-var path = require("path");
-var request = require('request');
-const download = require('download');
-var prac = require('./prac/prac.js');
-var _ = require('lodash');
-var Botbillder_dir = path.join(__dirname,"Botbilleder/")
-var babesfile = path.join(__dirname,"babes.txt")
-var lastshownfile = path.join(__dirname,"lastshown.txt")
+/**
+ * Configs
+ */
+var     botConfig       = require('./config/bot.json');
 
-if (!fs.existsSync(Botbillder_dir)){
-  fs.mkdirSync(Botbillder_dir)
-}
+/**
+ * Requires
+ */
+var     fs              = require('fs');
+var     uuid            = require('uuid/v1');
+var     request         = require('request');
+var     prac            = require('./prac/prac.js');
+var     _               = require('lodash');
+var     fileExtension   = require('file-extension');
 
+/**
+ * Constants
+ */
+const   Discord         = require('discord.js');
+const   client          = new Discord.Client();
+const   download        = require('download');
+const   imagePath       = botConfig.imageUploadPath;
+
+/**
+ * Bot connect
+ */
 client.on('ready', () => {
-  console.log('I am ready!');
-  client.user.setGame("with little girls");
-});
-//What what
-client.on('message', message => {
-  if (message.content.toLowerCase() === 'what what?') {
-    message.reply('in the butt!');
-  }
+    console.log('I am ready!');
+    client.user.setStatus('with little girls');
 });
 
-//Will you sing?
+/**
+ * On message
+ */
 client.on('message', message => {
-  if(message.content.toLocaleLowerCase() === "will you sing?") {
-  message.tts("What what in the butt");
-}
-});
-
-//what?
-client.on('message', message => {
-  if (message.content.toLowerCase() === 'what?') {
-    message.channel.send('https://www.youtube.com/watch?v=jC1s3c-sFF8');
-  }
-});
-
-//Cawer
-client.on('message', message => {
-  if(message.content.toLowerCase().includes("cawer") && !message.author.bot) {
-    message.channel.send("ALL HAIL THE KING CAWER");
-  }
-});
-
-//Nuller
-client.on('message', message => {
-  if(message.content.toLowerCase().includes("nuller")) {
-    message.channel.sendFile("bc4b8784-f172-44c3-9aef-edbb4b0b496e.jpg");
-  }
-});
-
-//wow?
-client.on('message', message => {
-  if(message.content.toLowerCase() === "wow?") {
-
-    var babe = fs.readFileSync(lastshownfile);
-    var textToAppend = babe + "\r\n";
-    fs.appendFile(babesfile, textToAppend);
-    message.channel.send("Tilføjet!");
-  }
-});
-
-//wuhu
-client.on('message', message => {
-  if(message.content.toLowerCase() === "wuhu") {
-    var babes = fs.readFileSync((babesfile)).toString().split("\r\n");
-    var babeRandom = Math.floor(Math.random() * (babes.length));
-      var billede = babes[babeRandom];
-      console.log(billede + ' sendt som wuhu');
-      message.channel.sendFile(billede);
-  }
-});
-
-
-
-//billede upload - ikke færdig
-client.on('message', message => {
-  if(message.content.toLowerCase().includes(".jpg") || message.content.toLowerCase().includes(".jpeg") || message.content.toLowerCase().includes(".gif") || message.content.toLowerCase().includes(".bmp") || message.content.toLowerCase().includes(".png")) {
-
-    if(message.content.toLocaleLowerCase().includes(".jpg")) {
-      console.log("JPG billede bliver tilføjet nu!")
-      
-      var billedenavn = guid.create().value + ".jpg";
-      var localPath = Botbillder_dir + billedenavn;
-            var url = message.content;
-            console.log(url);
-
-              download(url).then(data => {
-              fs.writeFileSync(localPath, data);
-              });
+    // Return if self.
+    if (message.author.id == botConfig.id) {
+        return;
     }
 
-        if(message.content.toLocaleLowerCase().includes(".jpeg")) {
-      console.log("JPEG billede bliver tilføjet nu!")
-      
-      var billedenavn = guid.create().value + ".jpeg";
-      var localPath = Botbillder_dir + billedenavn;
-            var url = message.content;
-            console.log(url);
+    var messageContent = message.content.trim().toLowerCase();
 
-              download(url).then(data => {
-              fs.writeFileSync(localPath, data);
-              });
-    }
-
-        if(message.content.toLocaleLowerCase().includes(".gif")) {
-      console.log("GIF billede bliver tilføjet nu!")
-      
-      var billedenavn = guid.create().value + ".gif";
-      var localPath = Botbillder_dir + billedenavn;
-            var url = message.content;
-            console.log(url);
-
-              download(url).then(data => {
-              fs.writeFileSync(localPath, data);
-              });
-    }
-
-        if(message.content.toLocaleLowerCase().includes(".bmp")) {
-      console.log("BMP billede bliver tilføjet nu!")
-      
-      var billedenavn = guid.create().value + ".bmp";
-      var localPath = Botbillder_dir + billedenavn;
-            var url = message.content;
-            console.log(url);
-
-              download(url).then(data => {
-              fs.writeFileSync(localPath, data);
-              });
-    }
-
-        if(message.content.toLocaleLowerCase().includes(".png")) {
-      console.log("PNG billede bliver tilføjet nu!")
-      
-      var billedenavn = guid.create().value + ".png";
-      var localPath = Botbillder_dir + billedenavn;
-            var url = message.content;
-            console.log(url);
-
-              download(url).then(data => {
-              fs.writeFileSync(localPath, data);
-              });
-    }
-
-    message.channel.reply("Billede uploadet");
-  }
-    
-});
-
-
-
-
-//whaat?
-client.on('message', message => {
-  if(message.content.toLowerCase() === "whaat?") {
-  fs.readdir(Botbillder_dir, function(err, items) {
-        var billedeRandom = Math.floor(Math.random() * (items.length - 0 + 1));
-        var billedeToSend = items[billedeRandom];
-        console.log(billedeToSend + ' er sendt');
-        message.channel.sendFile(Botbillder_dir + billedeToSend);
-        fs.writeFile(lastshownfile, Botbillder_dir  + billedeToSend);
-  });
-
-  }
-
-});
-
-
-//New Prac
-client.on('message', message => {
     // !prac
-    if (message.content.trim().toLowerCase().indexOf('!prac') > -1) {
-        // Return if self.
-        
-        if (message.author.bot) {
-            return;
-        }
-        
-
-        var action = message.content.replace('!prac', '').trim().toLowerCase();
+    if (messageContent.indexOf('!prac') > -1) {
+        var action = messageContent.replace('!prac', '').trim().toLowerCase();
 
         if (!action) {
             respondToMessage(message, prac.getPracSummary());
@@ -204,11 +63,125 @@ client.on('message', message => {
 
         return;
     }
+
+    // what what?
+    if (messageContent === 'what what?') {
+        respondToMessage(message, 'in the butt!');
+
+        return;
+    }
+
+    // will you sing?
+    if (messageContent === 'will you sing?') {
+        respondToMessageTTS(message, 'What what in the butt');
+
+        return;
+    }
+
+    // what?
+    if (messageContent === 'what?') {
+        respondToMessage(message, 'https://www.youtube.com/watch?v=jC1s3c-sFF8');
+
+        return;
+    }
+
+    // cawer
+    if (messageContent.includes('cawer')) {
+        respondToMessage(message, 'ALL HAIL THE KING CAWER');
+
+        return;
+    }
+
+    // nuller
+    if (messageContent.includes('nuller')) {
+        message.channel.sendFile("bc4b8784-f172-44c3-9aef-edbb4b0b496e.jpg");
+
+        return;
+    }
+
+    // wow?
+    if (messageContent === 'wow?') {
+        var babe = fs.readFileSync('lastshown.txt');
+        var textToAppend = babe + "\r\n";
+        fs.appendFile('babes.txt', textToAppend);
+        respondToMessage(message, 'Tilføjet!');
+
+        return;
+    }
+
+    // wuhu
+    if (messageContent === 'wuhu') {
+        var babes = fs.readFileSync('babes.txt').toString().split("\r\n");
+        var babeRandom = Math.floor(Math.random() * (babes.length));
+        var billede = babes[babeRandom];
+        message.channel.sendFile(billede);
+
+        return;
+    }
+
+    // whaat?
+    if (messageContent === 'whaat?') {
+        var path = imagePath;
+
+        fs.readdir(path, function(err, items) {
+            var billedeRandom = Math.floor(Math.random() * (items.length - 0 + 1));
+            var billedeToSend = items[billedeRandom];
+            message.channel.sendFile(path + '/' + billedeToSend);
+            fs.writeFile('lastshown.txt', path + '/' + billedeToSend);
+        });
+
+        return;
+    }
+
+    // image upload
+    var imageExtension = fileExtension(messageContent);
+
+    if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1) {
+        var billedenavn = uuid() + '.' + imageExtension;
+        l(billedenavn);
+        var localPath = imagePath + billedenavn;
+
+        download(messageContent).then(data => {
+            l('done');
+            fs.writeFileSync(localPath, data);
+        });
+
+        respondToMessage(message, 'Billede uploadet');
+    }
 });
 
+// Log our bot in
+client.login(botConfig.token);
+
+/**
+ * Respond to a message
+ * @param  Message  message
+ * @param  string   response
+ *
+ * @return void
+ */
 function respondToMessage(message, response) {
     message.channel.sendMessage(response);
 }
 
+/**
+ * Respond to a message with TTS
+ * @param  Message  message
+ * @param  string   response
+ *
+ * @return void
+ */
+function respondToMessageTTS(message, response) {
+    message.channel.sendMessage(response, { tts: true });
+}
 
-client.login('Kage er gud'); //Prod
+/**
+ * Log to console
+ *
+ * @param  data
+ *
+ * @return void
+ */
+function l(data) {
+    console.log(data);
+}
