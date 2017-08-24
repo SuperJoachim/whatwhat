@@ -7,6 +7,7 @@ var     botConfig       = require('./config/bot.json');
  * Requires
  */
 var     fs              = require('fs');
+var     path            = require('path');
 var     uuid            = require('uuid/v1');
 var     request         = require('request');
 var     prac            = require('./prac/prac.js');
@@ -19,7 +20,13 @@ var     fileExtension   = require('file-extension');
 const   Discord         = require('discord.js');
 const   client          = new Discord.Client();
 const   download        = require('download');
-const   imagePath       = botConfig.imageUploadPath;
+const   imagePath       = path.join(__dirname, botConfig.imageUploadPath + '/');
+const   babesfile       = path.join(__dirname, 'babes.txt');
+const   lastshownfile   = path.join(__dirname, 'lastshown.txt');
+
+if (!fs.existsSync(imagePath)){
+    fs.mkdirSync(imagePath)
+}
 
 /**
  * Bot connect
@@ -101,9 +108,9 @@ client.on('message', message => {
 
     // wow?
     if (messageContent === 'wow?') {
-        var babe = fs.readFileSync('lastshown.txt');
+        var babe = fs.readFileSync(lastshownfile);
         var textToAppend = babe + "\r\n";
-        fs.appendFile('babes.txt', textToAppend);
+        fs.appendFile(babesfile, textToAppend);
         respondToMessage(message, 'Tilføjet!');
 
         return;
@@ -111,7 +118,7 @@ client.on('message', message => {
 
     // wuhu
     if (messageContent === 'wuhu') {
-        var babes = fs.readFileSync('babes.txt').toString().split("\r\n");
+        var babes = fs.readFileSync(babesfile).toString().split("\r\n");
         var babeRandom = Math.floor(Math.random() * (babes.length));
         var billede = babes[babeRandom];
         message.channel.sendFile(billede);
@@ -127,7 +134,7 @@ client.on('message', message => {
             var billedeRandom = Math.floor(Math.random() * (items.length - 0 + 1));
             var billedeToSend = items[billedeRandom];
             message.channel.sendFile(path + '/' + billedeToSend);
-            fs.writeFile('lastshown.txt', path + '/' + billedeToSend);
+            fs.writeFile(lastshownfile, path + '/' + billedeToSend);
         });
 
         return;
@@ -138,11 +145,9 @@ client.on('message', message => {
 
     if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1) {
         var billedenavn = uuid() + '.' + imageExtension;
-        l(billedenavn);
         var localPath = imagePath + billedenavn;
 
         download(messageContent).then(data => {
-            l('done');
             fs.writeFileSync(localPath, data);
         });
 
