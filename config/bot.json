@@ -1,7 +1,7 @@
 {
   "prefix": "bot",
   "id": "327095592473853954",
-  "token": "MzI3MDk1NTkyNDczODUzOTU0.DCwXDQ.KLUtv-fmn3hXXHDGk1NpJgK2I_w",
+  "token": "<your token>",
   "commandTrigger": "!",
   "imageUploadPath": "c:\\BotBilleder",
   "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png"]
