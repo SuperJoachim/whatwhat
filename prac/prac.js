@@ -4,7 +4,7 @@ var     pracJsonPath    = './prac/prac.json';
 var     _               = require('lodash');
 
 exports.getPracHelp = function() {
-    return '**Commands:**\n**!prac** - get a prac summary\n**!prac yes** - sign up for prac today\n**!prac no** - let people know you can\'t prac today\n**!prac remove** - remove yourself from the prac entry\n**!prac help** - get this help list';
+    return '**Commands:**\n**!prac** - get a prac summary\n**!prac yes <game>** - sign up for prac today (game is optional)\n**!prac no <game>** - let people know you can\'t prac today (game is optional)\n**!prac remove <game>** - remove yourself from the prac entry (game is optional)\n**!prac help** - get this help list';
 }
 
 /**
@@ -20,23 +20,34 @@ exports.getPracSummary = function() {
                           + ('0' + time.getDate()).slice(-2);
     var pracToday       = pracJson[today];
 
-    var yesString       = '**Yes:** ';
-    var noString        = '**No:** ';
+    var response       = 'Prac overview:\n';
 
     if (pracToday) {
-        if (pracToday['yes']) {
-            _.forEach(pracToday['yes'], function(player) {
-                yesString = yesString + _.values(player)[0] + ', ';
+        _.forEach(pracToday, function(gamePrac, gameKey) {
+            var yes = [];
+            var no = [];
+
+            _.forEach(gamePrac['yes'], function(player) {
+                yes.push(_.values(player)[0]);
             });
-        }
-        if (pracToday['no']) {
-            _.forEach(pracToday['no'], function(player) {
-                noString = noString + _.values(player)[0] + ', ';
+            _.forEach(gamePrac['no'], function(player) {
+                no.push(_.values(player)[0]);
             });
-        }
+
+            response = response + '```diff\n';
+            response = response + gameKey.toUpperCase() + '\n';
+            response = response + '+ ' + yes.join(', ') + '\n';
+            response = response + '- ' + no.join(', ') + '\n';
+            response = response + '```';
+        });
+    }
+    else {
+        response = 'No prac entries today :('
     }
 
-    return '**Todays prac:**' + '\n' + yesString + '\n' + noString + '\n' + 'Help: !prac help';
+    response = response + '\nHelp: !prac help';
+
+    return response;
 }
 
 /**
@@ -47,7 +58,7 @@ exports.getPracSummary = function() {
  *
  * @return void
  */
-exports.updatePrac = function(author, action) {
+exports.updatePrac = function(author, action, game) {
     var pracJson        = require('./prac.json');
     var userId          = author.id;
     var username        = author.username;
@@ -59,19 +70,23 @@ exports.updatePrac = function(author, action) {
 
     // Create today index if not set.
     if (pracJson[today] == undefined) {
-        pracJson[today] = {"yes":[], "no":[]};
+        pracJson[today] = {};
+    }
+
+    if (pracJson[today][game] == undefined) {
+        pracJson[today][game] = {"yes":[], "no":[]};
     }
 
     // Check if exists.
-    if (_.find(pracJson[today][action], userId)) {
+    if (_.find(pracJson[today][game][action], userId)) {
         return 'You already said ' + action;
     }
 
     if (action == 'remove') {
-        _.remove(pracJson[today]['yes'], function(e) {
+        _.remove(pracJson[today][game]['yes'], function(e) {
             return Object.keys(e)[0] == userId;
         });
-        _.remove(pracJson[today]['no'], function(e) {
+        _.remove(pracJson[today][game]['no'], function(e) {
             return Object.keys(e)[0] == userId;
         });
 
@@ -82,12 +97,12 @@ exports.updatePrac = function(author, action) {
 
     var oppositeAction = action == 'yes' ? 'no' : 'yes';
 
-    _.remove(pracJson[today][oppositeAction], function(e) {
+    _.remove(pracJson[today][game][oppositeAction], function(e) {
         return Object.keys(e)[0] == userId;
     });
 
     // Add to dataset.
-    pracJson[today][action].push(player);
+    pracJson[today][game][action].push(player);
 
     updatePracFile(pracJson);
 
