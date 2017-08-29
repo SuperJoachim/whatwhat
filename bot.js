@@ -29,6 +29,12 @@ if (!fs.existsSync(imagePath)){
     fs.mkdirSync(imagePath)
 }
 
+_.mixin({
+    isBlank: function(string) {
+        return (_.isUndefined(string) || _.isNull(string) || string.trim().length === 0)
+    }
+});
+
 /**
  * Bot connect
  */
@@ -94,7 +100,23 @@ client.on('message', message => {
 
     // !prac
     if (messageContent.indexOf('!prac') > -1) {
-        var action = messageContent.replace('!prac', '').trim().toLowerCase();
+        var pracTxt = messageContent.replace('!prac', '').trim().toLowerCase();
+        var matches = pracTxt.match(/([\w+]+)/g);
+        var game = botConfig.defaultPracGame;
+        var action = null;
+
+        if (matches != undefined && matches[0] != undefined) {
+            action = matches[0];
+        }
+
+        if (matches != undefined && matches[1] != undefined) {
+            if (matches[1] && botConfig.pracGames.indexOf(matches[1]) > -1) {
+                game = matches[1];
+            }
+            else {
+                respondToMessage(message, 'Game is not valid. Available games are **' + botConfig.pracGames.join(', ') + '**. Default game is **' + botConfig.defaultPracGame + '**.');
+            }
+        }
 
         if (!action) {
             respondToMessage(message, prac.getPracSummary());
@@ -107,10 +129,10 @@ client.on('message', message => {
         }
 
         if (action == 'yes' || action == 'no' || action == 'remove') {
-            respondToMessage(message, prac.updatePrac(message.author, action));
+            respondToMessage(message, prac.updatePrac(message.author, action, game));
         }
         else {
-            respondToMessage(message, action + ' is not a valid command.');
+            respondToMessage(message, '**' + action + '** is not a valid command. See !prac help');
         }
 
         return;
