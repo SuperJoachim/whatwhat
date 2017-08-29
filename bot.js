@@ -54,6 +54,27 @@ client.on('message', message => {
 
     var messageContent = message.content.trim().toLowerCase();
 
+    // !say
+    if (messageContent.indexOf('!say') > -1) {
+        var count = messageContent.replace( /^\D+/g, '');
+
+        if (count > 100) {
+            count = 100;
+        }
+
+        var sayTxt = messageContent.replace('!say', '').replace(count, '');
+
+        var response = '';
+
+        for (var i = 0; i < count; i++) {
+            response = response + ' ' + sayTxt.trim();
+        }
+
+        respondToMessageTTS(message, response.trim());
+
+        return;
+    }
+
     // !rime
     if (messageContent === '!rime') {
         var randomRime = rime.getRandomRime();
