@@ -1,8 +1,10 @@
 {
   "prefix": "bot",
-  "id": "327095592473853954", // prod: 326459579720269825
+  "id": "327095592473853954",
   "token": "<your token>",
   "commandTrigger": "!",
   "imageUploadPath": "C:\\BotBilleder",
+  "babePath": "C:\\whatbot\\babes.txt",
+  "lastShownImage": "C:\\whatbot\\lastshown.txt",
   "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png"]
 }

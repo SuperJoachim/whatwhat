@@ -14,6 +14,7 @@ var     prac            = require('./prac/prac.js');
 var     rime            = require('./rime/rime.js');
 var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
+var     cmd             = require('node-cmd');
 
 /**
  * Constants
@@ -22,8 +23,8 @@ const   Discord         = require('discord.js');
 const   client          = new Discord.Client();
 const   download        = require('download');
 const   imagePath       = path.join(botConfig.imageUploadPath + '\\');
-const   babesfile       = path.join(__dirname, 'babes.txt');
-const   lastshownfile   = path.join(__dirname, 'lastshown.txt');
+const   babesfile       = babePath;
+const   lastshownfile   = lastShownImage;
 
 if (!fs.existsSync(imagePath)){
     fs.mkdirSync(imagePath)
@@ -189,6 +190,15 @@ client.on('message', message => {
         var babeRandom = Math.floor(Math.random() * (babes.length));
         var billede = babes[babeRandom];
         message.channel.sendFile(billede);
+
+        return;
+    }
+
+    
+    // weryimpressive
+    if (messageContent === 'weryimpressive') {
+        message.channel.sendMessage("Opdaterer botten!");
+        cmd.run("powershell -file Deploy.ps1 ")
 
         return;
     }
