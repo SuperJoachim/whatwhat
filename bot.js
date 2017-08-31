@@ -21,7 +21,7 @@ var     fileExtension   = require('file-extension');
 const   Discord         = require('discord.js');
 const   client          = new Discord.Client();
 const   download        = require('download');
-const   imagePath       = path.join(__dirname, botConfig.imageUploadPath + '/');
+const   imagePath       = path.join(botConfig.imageUploadPath + '\\');
 const   babesfile       = path.join(__dirname, 'babes.txt');
 const   lastshownfile   = path.join(__dirname, 'lastshown.txt');
 

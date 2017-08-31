@@ -3,6 +3,6 @@
   "id": "327095592473853954", // prod: 326459579720269825
   "token": "<your token>",
   "commandTrigger": "!",
-  "imageUploadPath": "BotBilleder",
+  "imageUploadPath": "C:\\BotBilleder",
   "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png"]
 }
