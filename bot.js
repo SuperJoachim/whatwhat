@@ -116,6 +116,7 @@ client.on('message', message => {
             }
             else {
                 respondToMessage(message, 'Game is not valid. Available games are **' + botConfig.pracGames.join(', ') + '**. Default game is **' + botConfig.defaultPracGame + '**.');
+                return;
             }
         }
 
@@ -194,7 +195,7 @@ client.on('message', message => {
         return;
     }
 
-    
+
     // weryimpressive
     if (messageContent === 'weryimpressive') {
         message.channel.sendMessage("Opdaterer botten!");
