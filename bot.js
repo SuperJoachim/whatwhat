@@ -23,8 +23,8 @@ const   Discord         = require('discord.js');
 const   client          = new Discord.Client();
 const   download        = require('download');
 const   imagePath       = path.join(botConfig.imageUploadPath + '\\');
-const   babesfile       = babePath;
-const   lastshownfile   = lastShownImage;
+const   babesfile       = botConfig.babePath;
+const   lastshownfile   = botConfig.lastShownImage;
 
 if (!fs.existsSync(imagePath)){
     fs.mkdirSync(imagePath)
