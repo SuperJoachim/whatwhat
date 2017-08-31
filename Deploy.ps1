@@ -15,6 +15,8 @@ Invoke-Expression -Command "npm install"
 "Ændre config"
 $Token = Get-Content "$PathToStaticStuff\token.txt"
 (Get-Content "$PathToBot\config\bot.json").Replace("<your token>", $Token) | Set-Content "$PathToBot\config\bot.json" -Verbose
+$botID = Get-Content "$PathToStaticStuff\botid.txt"
+(Get-Content "$PathToBot\config\bot.json").Replace("<your bot id>", $botID) | Set-Content "$PathToBot\config\bot.json" -Verbose
 
 "Start bot"
 Invoke-Expression -Command "node bot.js"
