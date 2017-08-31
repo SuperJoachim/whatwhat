@@ -201,7 +201,7 @@ client.on('message', message => {
             var billedeRandom = Math.floor(Math.random() * (items.length - 0 + 1));
             var billedeToSend = items[billedeRandom];
             message.channel.sendFile(path + '/' + billedeToSend);
-            fs.writeFile(lastshownfile, path + '/' + billedeToSend);
+            fs.writeFile(lastshownfile, path + billedeToSend);
         });
 
         return;
