@@ -2,7 +2,7 @@ $PathToBot = "C:\whatbot\whatwhat"
 $PathToStaticStuff = "C:\whatbot"
 
 "Sluk for los bottos"
-Get-Process -Name "cmd" | Stop-Process -Force -Verbose
+Get-Process -Name "node" | Stop-Process -Force -Verbose
 "Begynder deployement"
 "Henter nyt shit fra GIT"
 "Reset"
