@@ -2,7 +2,7 @@ $PathToBot = "C:\whatbot\whatwhat"
 $PathToStaticStuff = "C:\whatbot"
 
 "Sluk for los bottos"
-Get-Process -Name "node" | Stop-Process -Force -Verbose
+Get-Service -Name "whatbot" | stop-Service -Force -Verbose
 "Begynder deployement"
 "Henter nyt shit fra GIT"
 "Reset"
@@ -19,6 +19,6 @@ $botID = Get-Content "$PathToStaticStuff\botid.txt"
 (Get-Content "$PathToBot\config\bot.json").Replace("<your bot id>", $botID) | Set-Content "$PathToBot\config\bot.json" -Verbose
 
 "Start bot"
-Invoke-Expression -Command "node bot.js"
+Start-Service -Name "whatbot"
 
 "Profit"
