@@ -15,6 +15,7 @@ var     rime            = require('./rime/rime.js');
 var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
 var     cmd             = require('node-cmd');
+var     ytdl            = require('ytdl-core');
 
 /**
  * Constants
@@ -168,6 +169,20 @@ client.on('message', message => {
 
         return;
     }
+
+    // Verden
+    if (messageContent.includes('wonderful')) {
+        const voiceChannel = message.member.voiceChannel;
+        if (!voiceChannel) return message.reply(`Skal ind i en kanal først, nigga!`);
+            voiceChannel.join()
+            .then(connnection => {
+        const stream = ytdl("https://www.youtube.com/watch?v=IiHPo3_MwPQ", { filter: 'audioonly' });
+        const dispatcher = connnection.playStream(stream);
+        dispatcher.on('end', () => voiceChannel.leave());
+      });
+        return;
+    }
+    
 
     // nuller
     if (messageContent.includes('nuller')) {

@@ -12,7 +12,8 @@
     "request": "^2.81.0",
     "uuid": "^3.1.0",
     "node-cmd": "^3.0.0",
-    "node-windows": "^0.1.14"
+    "node-windows": "^0.1.14",
+    "ytdl-core": "^0.17.0"
   },
   "devDependencies": {},
   "scripts": {
