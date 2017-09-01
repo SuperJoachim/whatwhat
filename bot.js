@@ -204,6 +204,13 @@ client.on('message', message => {
         return;
     }
 
+     // wing
+    if (messageContent === 'wing') {
+        message.channel.sendMessage("wong");
+
+        return;
+    }
+
     // whaat?
     if (messageContent === 'whaat?') {
         var path = imagePath;
