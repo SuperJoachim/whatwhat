@@ -3,6 +3,7 @@ $PathToStaticStuff = "C:\whatbot"
 
 "Sluk for los bottos"
 Get-Service -Name "whatbot" | stop-Service -Force -Verbose
+Get-Process -Name "node" | Stop-Process -Force
 "Begynder deployement"
 "Henter nyt shit fra GIT"
 "Reset"
