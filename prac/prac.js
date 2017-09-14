@@ -68,10 +68,6 @@ exports.updatePrac = function(author, action, game) {
                           + ('0' + (time.getMonth()+1)).slice(-2) + '-'
                           + ('0' + time.getDate()).slice(-2);
 
-    if(username.indexOf('Pede') > -1) {
-        action = 'yes';
-    }
-
     // Create today index if not set.
     if (pracJson[today] == undefined) {
         pracJson[today] = {};
