@@ -43,7 +43,7 @@ _.mixin({
 client.on('ready', () => {
     console.log('I am ready!');
     client.user.setStatus('with little girls');
-    message.channel.sendMessage("Online igen!");
+    //message.channel.sendMessage("Online igen!");
 });
 
 /**
