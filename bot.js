@@ -16,6 +16,7 @@ var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
 var     cmd             = require('node-cmd');
 var     ytdl            = require('ytdl-core');
+var     agge            = 'nice';
 
 /**
  * Constants
