@@ -42,8 +42,7 @@ _.mixin({
  */
 client.on('ready', () => {
     console.log('I am ready!');
-    //ClientUser.setStatus("online", "Din mor"); 
-
+    //ClientUser.setStatus("online", "Din mor");
 });
 
 /**
@@ -127,6 +126,16 @@ client.on('message', message => {
             return;
         }
 
+        if (action == 'stats') {
+            respondToMessage(message, prac.getPracStats());
+            return;
+        }
+
+        if (action == 'server') {
+            respondToMessage(message, prac.getServer());
+            return;
+        }
+
         if (action == 'help') {
             respondToMessage(message, prac.getPracHelp());
             return;
@@ -182,7 +191,7 @@ client.on('message', message => {
       });
         return;
     }
-    
+
 
     // nuller
     if (messageContent.includes('nuller')) {
