@@ -42,8 +42,7 @@ _.mixin({
  */
 client.on('ready', () => {
     console.log('I am ready!');
-    ClientUser.setStatus("online", "Din mor");
-
+    //ClientUser.setStatus("online", "Din mor");
 });
 
 /**
