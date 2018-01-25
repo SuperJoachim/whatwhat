@@ -4,7 +4,11 @@ var     pracJsonPath    = './prac/prac.json';
 var     _               = require('lodash');
 
 exports.getPracHelp = function() {
-    return '**Commands:**\n**!prac** - get a prac summary\n**!prac yes <game>** - sign up for prac today (game is optional)\n**!prac no <game>** - let people know you can\'t prac today (game is optional)\n**!prac remove <game>** - remove yourself from the prac entry (game is optional)\n**!prac help** - get this help list';
+    return '**Commands:**\n**!prac** - get a prac summary\n**!prac yes <game>** - sign up for prac today (game is optional)\n**!prac no <game>** - let people know you can\'t prac today (game is optional)\n**!prac remove <game>** - remove yourself from the prac entry (game is optional)\n**!prac help** - get this help list\n**!prac server** - get server ip and pass\n**!prac stats** - get prac stats';
+}
+
+exports.getServer = function() {
+    return 'connect 52.232.66.78:27015; password aggeh';
 }
 
 /**
@@ -45,9 +49,91 @@ exports.getPracSummary = function() {
         response = 'No prac entries today :('
     }
 
-    response = response + '\nHelp: !prac help';
+    response = response + '\n**Help:** !prac help - **Server:** !prac server - **Stats:** !prac stats';
 
     return response;
+}
+
+/**
+ * get prac stats.
+ *
+ * @return string
+ */
+exports.getPracStats = function() {
+    var pracJson        = require('./prac.json');
+    var time            = new Date();
+
+    var response       = 'Prac stats:\n';
+
+    if (pracJson) {
+        var stats = {};
+        var players = {};
+
+        _.forEach(pracJson, function(prac) {
+            l(prac);
+            _.forEach(prac, function(gamePrac, gameKey) {
+                var yes = [];
+                var no = [];
+
+                _.forEach(gamePrac['yes'], function(player) {
+                    assignPracStat(stats, players, gameKey, player, 'yes');
+                });
+                _.forEach(gamePrac['no'], function(player) {
+                    assignPracStat(stats, players, gameKey, player, 'no');
+                });
+            });
+        });
+
+        _.forEach(stats, function(gameStats, gameKey) {
+            response = response + '```diff\n';
+            response = response + gameKey.toUpperCase() + '\n';
+
+            _.forEach(gameStats, function(playerStats, playerKey) {
+                var yesCount = playerStats['yes'] ? playerStats['yes'] : 0;
+                var noCount = playerStats['no'] ? playerStats['no'] : 0;
+                response = response + players[playerKey] + ': yes (' + yesCount + ') no (' + noCount + ')\n';
+
+            });
+
+            response = response + '```';
+        });
+    }
+    else {
+        response = 'No prac entries found :('
+    }
+
+    return response;
+}
+
+/**
+ * Format prac stat
+ *
+ * @param  stats
+ * @param  players
+ * @param  gameKey
+ * @param  player
+ * @param  action
+ *
+ * @return void
+ */
+function assignPracStat(stats, players, gameKey, player, action) {
+    var p = Object.keys(player)[0];
+
+    players[p] = _.values(player)[0];
+
+    if (!stats[gameKey]) {
+        stats[gameKey] = {};
+    }
+    if (!stats[gameKey][p]) {
+        stats[gameKey][p] = {};
+    }
+    if (!stats[gameKey][p][action]) {
+        stats[gameKey][p][action] = 0;
+    }
+
+    stats[gameKey][p][action] = stats[gameKey][p][action] + 1;
+
+    return stats;
 }
 
 /**
