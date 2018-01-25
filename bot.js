@@ -169,8 +169,8 @@ client.on('message', message => {
         });
         
         rcon.connect().then(() => {
-            return rcon.command(rconCommand).then(() => {
-                respondToMessage(message, rconCommand + ' sendt')
+            return rcon.command(rconCommand).then(status =>  {
+                respondToMessage(message, status)
             });
         }).then(
             () => rcon.disconnect()
