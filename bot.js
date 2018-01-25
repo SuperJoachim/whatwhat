@@ -158,6 +158,30 @@ client.on('message', message => {
         return;
     }
 
+    // rcon cmd
+    if (messageContent.indexOf('!rcon') > -1) {
+
+        var rconCommand = messageContent.replace('!rcon ', '')
+
+        let rcon = require('srcds-rcon')({
+            address: botConfig.csgoserver,
+            password: botConfig.rcon
+        });
+        
+        rcon.connect().then(() => {
+            return rcon.command(rconCommand).then(() => {
+                respondToMessage(message, rconCommand + ' sendt')
+            });
+        }).then(
+            () => rcon.disconnect()
+        ).catch(err => {
+            respondToMessage(message, err);
+            respondToMessage(message, err.stack);
+        });
+
+        return;
+    }
+
     // will you sing?
     if (messageContent === 'will you sing?') {
         respondToMessageTTS(message, 'What what in the butt');

@@ -8,5 +8,7 @@
   "lastShownImage": "C:\\whatbot\\lastshown.txt",
   "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png"],
   "pracGames": ["cs", "pubg", "wow", "overwatch", "raket"],
-  "defaultPracGame": "cs"
+  "defaultPracGame": "cs",
+  "csgoserver": "<your csgo server ip>",
+  "rcon": "<your rcon password>"
 }
