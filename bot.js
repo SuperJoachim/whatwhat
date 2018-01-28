@@ -193,7 +193,6 @@ client.on('message', message => {
         var team1 = [];
         var team2 = [];
         var activeTeam = "1";
-        var memberOnEachTeam = Math.ceil(member.length);
 
         console.log(member.length);
 
@@ -213,7 +212,7 @@ client.on('message', message => {
                 team2.push(memberToAdd);
                 activeTeam = 1;
             }
-            //member.splice(randoMmemberToAdd, 1);
+            member.splice(randoMmemberToAdd, 1);
             
             console.log(i);
           }
