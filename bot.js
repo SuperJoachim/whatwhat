@@ -182,6 +182,40 @@ client.on('message', message => {
         return;
     }
 
+    
+    // randomize teams
+    if (messageContent.indexOf('!teams') > -1) {
+        
+        var members = messageContent.replace('!teams ', '')
+        var member = members.split(' ');
+        var team1 = [];
+        var team2 = [];
+        var activeTeam = "1";
+        var memberl = member.length;
+        
+        for (let i = 0; i < memberl; i++) {
+            var randoMmemberToAdd = Math.floor(Math.random() * (member.length));
+            var memberToAdd = member[randoMmemberToAdd];
+            
+            if(activeTeam == 1)
+            {
+                team1.push(memberToAdd);
+                activeTeam = 2;
+            }
+            else
+            {
+                team2.push(memberToAdd);
+                activeTeam = 1;
+            }
+            member.splice(randoMmemberToAdd, 1);
+          }
+          
+          respondToMessage(message, '```\nTeam 1\n' + team1 + '\n```');
+          respondToMessage(message, '```\nTeam 2\n' + team2 + '\n```');
+
+        return;
+    
+    }
     // will you sing?
     if (messageContent === 'will you sing?') {
         respondToMessageTTS(message, 'What what in the butt');
