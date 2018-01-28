@@ -195,8 +195,8 @@ client.on('message', message => {
         var activeTeam = "1";
 
         console.log(member.length);
-
-        for (let i = 0; i < member.length; i++) {
+        var memberl = member.length;
+        for (let i = 0; i < memberl; i++) {
             //console.log('start '+ member);
             
             var randoMmemberToAdd = Math.floor(Math.random() * (member.length));
@@ -217,9 +217,8 @@ client.on('message', message => {
             console.log(i);
           }
           
-          //console.log(member + ' final');
-          //console.log('team1: ' + team1);
-          //console.log('team2: ' + team2)
+          respondToMessage(message, '```\nTeam 1\n' + team1 + '\n```');
+          respondToMessage(message, '```\nTeam 2\n' + team2 + '\n```');
 
 
         return;
