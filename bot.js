@@ -182,6 +182,50 @@ client.on('message', message => {
         return;
     }
 
+    
+    // randomize teams
+    if (messageContent.indexOf('!teams') > -1) {
+        
+        var members = messageContent.replace('!teams ', '')
+
+        var member = members.split(' ');
+
+        var team1 = [];
+        var team2 = [];
+        var activeTeam = "1";
+        var memberOnEachTeam = Math.ceil(member.length);
+
+        console.log(member.length);
+
+        for (let i = 0; i < member.length; i++) {
+            //console.log('start '+ member);
+            
+            var randoMmemberToAdd = Math.floor(Math.random() * (member.length));
+            var memberToAdd = member[randoMmemberToAdd];
+            
+            if(activeTeam == 1)
+            {
+                team1.push(memberToAdd);
+                activeTeam = 2;
+            }
+            else
+            {
+                team2.push(memberToAdd);
+                activeTeam = 1;
+            }
+            //member.splice(randoMmemberToAdd, 1);
+            
+            console.log(i);
+          }
+          
+          //console.log(member + ' final');
+          //console.log('team1: ' + team1);
+          //console.log('team2: ' + team2)
+
+
+        return;
+    
+    }
     // will you sing?
     if (messageContent === 'will you sing?') {
         respondToMessageTTS(message, 'What what in the butt');
