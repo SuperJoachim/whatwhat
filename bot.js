@@ -167,7 +167,7 @@ client.on('message', message => {
             address: botConfig.csgoserver,
             password: botConfig.rcon
         });
-        
+
         rcon.connect().then(() => {
             return rcon.command(rconCommand).then(status =>  {
                 respondToMessage(message, status)
@@ -182,40 +182,24 @@ client.on('message', message => {
         return;
     }
 
-    
     // randomize teams
     if (messageContent.indexOf('!teams') > -1) {
-        
-        var members = messageContent.replace('!teams ', '')
-        var member = members.split(' ');
-        var team1 = [];
-        var team2 = [];
-        var activeTeam = "1";
-        var memberl = member.length;
-        
-        for (let i = 0; i < memberl; i++) {
-            var randoMmemberToAdd = Math.floor(Math.random() * (member.length));
-            var memberToAdd = member[randoMmemberToAdd];
-            
-            if(activeTeam == 1)
-            {
-                team1.push(memberToAdd);
-                activeTeam = 2;
-            }
-            else
-            {
-                team2.push(memberToAdd);
-                activeTeam = 1;
-            }
-            member.splice(randoMmemberToAdd, 1);
-          }
-          
-          respondToMessage(message, '```\nTeam 1\n' + team1 + '\n```');
-          respondToMessage(message, '```\nTeam 2\n' + team2 + '\n```');
+        var members = messageContent.replace('!teams ', '').split(' ');
+        var teams = _.chunk(_.shuffle(members, members.length), Math.ceil(members.length / 2));
+        var response = '';
+
+        _.forEach(teams, function(players) {
+            response = response + '```diff\n';
+            response = response + 'Team\n';
+            response = response + '+ ' + players.join(', ') + '\n';
+            response = response + '```';
+        });
+
+        respondToMessage(message, response);
 
         return;
-    
     }
+
     // will you sing?
     if (messageContent === 'will you sing?') {
         respondToMessageTTS(message, 'What what in the butt');
