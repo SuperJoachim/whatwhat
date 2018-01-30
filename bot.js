@@ -143,6 +143,7 @@ client.on('message', message => {
 
         if (action == 'yes' || action == 'no' || action == 'remove') {
             respondToMessage(message, prac.updatePrac(message.author, action, game));
+            respondToMessage(message, prac.getPracSummary());
         }
         else {
             respondToMessage(message, '**' + action + '** is not a valid command. See !prac help');
@@ -188,9 +189,9 @@ client.on('message', message => {
         var teams = _.chunk(_.shuffle(members, members.length), Math.ceil(members.length / 2));
         var response = '';
 
-        _.forEach(teams, function(players) {
+        _.forEach(teams, function(players, i) {
             response = response + '```diff\n';
-            response = response + 'Team\n';
+            response = response + 'Team ' + (i+1) + '\n';
             response = response + '+ ' + players.join(', ') + '\n';
             response = response + '```';
         });
