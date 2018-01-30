@@ -225,11 +225,12 @@ client.on('message', message => {
     // Verden
     if (messageContent.includes('wonderful')) {
         const voiceChannel = message.member.voiceChannel;
+        const streamOptinos = { seek: 0, volume: 1 };
         if (!voiceChannel) return message.reply(`Skal ind i en kanal først, nigga!`);
             voiceChannel.join()
             .then(connnection => {
-        const stream = ytdl("https://www.youtube.com/watch?v=IiHPo3_MwPQ", { filter: 'audioonly' });
-        const dispatcher = connnection.playStream(stream);
+        const stream = ytdl("https://www.youtube.com/watch?v=IiHPo3_MwPQ", { filter: 'audioonly' }).on('error', (err) => respondToMessage(message, err.toString()));
+        const dispatcher = connnection.playStream(stream, streamOptinos);
         dispatcher.on('end', () => voiceChannel.leave());
       });
         return;
