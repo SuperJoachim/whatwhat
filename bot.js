@@ -143,6 +143,7 @@ client.on('message', message => {
 
         if (action == 'yes' || action == 'no' || action == 'remove') {
             respondToMessage(message, prac.updatePrac(message.author, action, game));
+            respondToMessage(message, prac.getPracSummary());
         }
         else {
             respondToMessage(message, '**' + action + '** is not a valid command. See !prac help');

@@ -165,7 +165,7 @@ exports.updatePrac = function(author, action, game) {
 
     // Check if exists.
     if (_.find(pracJson[today][game][action], userId)) {
-        return 'You already said ' + action;
+        return 'You fucking idiot! You already said ' + action;
     }
 
     if (action == 'remove') {
