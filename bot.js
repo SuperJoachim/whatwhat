@@ -222,6 +222,10 @@ client.on('message', message => {
         return;
     }
 
+    if (messageContent === 'agge?!') {
+        respondToMessageTTS(message, _.fill(Array(50), 'agge').join(' '));
+    }
+
     // Verden
     if (messageContent.includes('wonderful')) {
         const voiceChannel = message.member.voiceChannel;
