@@ -8,7 +8,7 @@ exports.getPracHelp = function() {
 }
 
 exports.getServer = function() {
-    return 'connect 104.40.148.37:27015;password aggeh';
+    return 'steam://connect/104.40.148.37:27015/aggeh / connect 104.40.148.37:27015;password aggeh';
 }
 
 /**
