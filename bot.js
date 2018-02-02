@@ -229,6 +229,7 @@ client.on('message', message => {
         return;
     }
 
+    // agge
     if (messageContent === 'agge?!') {
         respondToMessageTTS(message, _.fill(Array(50), 'agge').join(' '));
     }
