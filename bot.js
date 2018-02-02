@@ -208,6 +208,13 @@ client.on('message', message => {
         return;
     }
 
+    // Truth
+    if (messageContent === '!truth') {
+        respondToMessage(message, 'https://strudseinfo.dk - sandheden omkring strudse. Det er sandt når det står på nettet.');
+
+        return;
+    }
+
     // what?
     if (messageContent === 'what?') {
         respondToMessage(message, 'https://www.youtube.com/watch?v=jC1s3c-sFF8');
