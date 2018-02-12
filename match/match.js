@@ -14,7 +14,7 @@ exports.updateMatches = function(action, args) {
 
     if (action == 'add') {
         var matchDate       = args[1];
-        var matchOpponent   = args[2];
+        var matchOpponent   = args.slice(2).join(' ');
         var matchHash       = createMatchHash();
 
         var matchMoment = moment(matchDate);
