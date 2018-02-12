@@ -11,11 +11,14 @@ var     path            = require('path');
 var     uuid            = require('uuid/v1');
 var     request         = require('request');
 var     prac            = require('./prac/prac.js');
+var     match           = require('./match/match.js');
 var     rime            = require('./rime/rime.js');
 var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
 var     cmd             = require('node-cmd');
 var     ytdl            = require('ytdl-core');
+var     pracJsonPath    = './prac/prac.json';
+var     matchJsonPath   = './match/match.json';
 
 /**
  * Constants
@@ -29,6 +32,16 @@ const   lastshownfile   = botConfig.lastShownImage;
 
 if (!fs.existsSync(imagePath)){
     fs.mkdirSync(imagePath)
+}
+
+if (!fs.existsSync(pracJsonPath)){
+    l('prac file created');
+    fs.writeFileSync(pracJsonPath, JSON.stringify({}));
+}
+
+if (!fs.existsSync(matchJsonPath)){
+    l('match file created');
+    fs.writeFileSync(matchJsonPath, JSON.stringify({}));
 }
 
 _.mixin({
@@ -144,6 +157,44 @@ client.on('message', message => {
         if (action == 'yes' || action == 'no' || action == 'remove') {
             respondToMessage(message, prac.updatePrac(message.author, action, game));
             respondToMessage(message, prac.getPracSummary());
+        }
+        else {
+            respondToMessage(message, '**' + action + '** is not a valid command. See !prac help');
+        }
+
+        return;
+    }
+
+    // !match
+    if (messageContent.indexOf('!match') > -1) {
+        var matchTxt = messageContent.replace('!match', '').trim().toLowerCase();
+        var matches = matchTxt.match(/([\w+]+)/g);
+        var args = matchTxt.split(' ');
+        var action = null;
+
+        if (matches != undefined && matches[0] != undefined) {
+            action = matches[0];
+        }
+
+        if (!action) {
+            respondToMessage(message, match.getMatchSummary());
+            return;
+        }
+
+        if (action == 'help') {
+            respondToMessage(message, match.getMatchHelp());
+            return;
+        }
+
+        if (action == 'add' || action == 'remove') {
+            respondToMessage(message, match.updateMatches(action, args));
+            return;
+        }
+
+        if (action == 'yes' || action == 'no') {
+            matchHash = args[1];
+            respondToMessage(message, match.updateMatch(message.author, action, matchHash));
+            respondToMessage(message, match.getMatchSummary());
         }
         else {
             respondToMessage(message, '**' + action + '** is not a valid command. See !prac help');

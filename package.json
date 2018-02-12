@@ -8,12 +8,13 @@
     "download": "^6.2.5",
     "file-extension": "^3.1.2",
     "lodash": "^4.17.4",
+    "moment": "^2.20.1",
+    "node-cmd": "^3.0.0",
     "path": "^0.12.7",
     "request": "^2.81.0",
+    "srcds-rcon": "^2.2.1",
     "uuid": "^3.1.0",
-    "node-cmd": "^3.0.0",
-    "ytdl-core": "^0.20.0",
-    "srcds-rcon": "^2.2.1"
+    "ytdl-core": "^0.20.0"
   },
   "devDependencies": {},
   "scripts": {
