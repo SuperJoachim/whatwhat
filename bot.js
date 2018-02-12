@@ -17,6 +17,8 @@ var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
 var     cmd             = require('node-cmd');
 var     ytdl            = require('ytdl-core');
+var     pracJsonPath    = './prac/prac.json';
+var     matchJsonPath   = './match/match.json';
 
 /**
  * Constants
@@ -30,6 +32,16 @@ const   lastshownfile   = botConfig.lastShownImage;
 
 if (!fs.existsSync(imagePath)){
     fs.mkdirSync(imagePath)
+}
+
+if (!fs.existsSync(pracJsonPath)){
+    l('prac file created');
+    fs.writeFileSync(pracJsonPath, JSON.stringify({}));
+}
+
+if (!fs.existsSync(matchJsonPath)){
+    l('match file created');
+    fs.writeFileSync(matchJsonPath, JSON.stringify({}));
 }
 
 _.mixin({
