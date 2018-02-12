@@ -186,7 +186,13 @@ client.on('message', message => {
             return;
         }
 
-        if (action == 'add' || action == 'remove') {
+        if (action == 'add' ) {
+            args = args.slice(0, 3, args.splice(2, 1, args.slice(2).join(' ')));
+            respondToMessage(message, match.updateMatches(action, args));
+            return;
+        }
+
+        if (action == 'remove') {
             respondToMessage(message, match.updateMatches(action, args));
             return;
         }
