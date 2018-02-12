@@ -185,12 +185,12 @@ client.on('message', message => {
             respondToMessage(message, match.getMatchHelp());
             return;
         }
-
+        
         if (action == 'add' || action == 'remove') {
             respondToMessage(message, match.updateMatches(action, args));
             return;
         }
-
+        
         if (action == 'yes' || action == 'no') {
             matchHash = args[1];
             respondToMessage(message, match.updateMatch(message.author, action, matchHash));
