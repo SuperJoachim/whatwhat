@@ -14,7 +14,7 @@ exports.getMatchHelp = function() {
         { name: 'match help', desc: 'get this help list' },
     ];
 
-    return '**Commands:**\n' + commands.map(cmd => '**' + cmd.name + '** - ' + cmd.desc).join('\n') + '\n';
+    return '**Commands:**\n' + commands.map(cmd => '**!' + cmd.name + '** - ' + cmd.desc).join('\n') + '\n';
 }
 
 exports.updateMatches = function(action, args) {
