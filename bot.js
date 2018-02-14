@@ -186,7 +186,7 @@ client.on('message', message => {
             return;
         }
         
-        if (action == 'add' || action == 'remove') {
+        if (['add', 'remove', 'move'].indexOf(action) >= 0 ) {
             respondToMessage(message, match.updateMatches(action, args));
             return;
         }
