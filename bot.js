@@ -185,13 +185,23 @@ client.on('message', message => {
             respondToMessage(message, match.getMatchHelp());
             return;
         }
-        
-        if (['add', 'remove', 'move'].indexOf(action) >= 0 ) {
+
+        if (['add', 'remove', 'move', 'played', 'result'].indexOf(action) >= 0) {
+            if (!authorHasRole(message, 'Members')) {
+                respondToMessage(message, 'Sorry, members only.');
+                return;
+            }
+
             respondToMessage(message, match.updateMatches(action, args));
             return;
         }
-        
+
         if (action == 'yes' || action == 'no') {
+            if (!authorHasRole(message, 'Members')) {
+                respondToMessage(message, 'Sorry, members only.');
+                return;
+            }
+
             matchHash = args[1];
             respondToMessage(message, match.updateMatch(message.author, action, matchHash));
             respondToMessage(message, match.getMatchSummary());
@@ -395,6 +405,24 @@ function respondToMessage(message, response) {
  */
 function respondToMessageTTS(message, response) {
     message.channel.sendMessage(response, { tts: true });
+}
+
+/**
+ * Check if the message author has a specific role.
+ *
+ * @param  Message  message
+ * @param  string   roleName
+ *
+ * @return boolean
+ */
+function authorHasRole(message, roleName = '') {
+    let role = message.guild.roles.find('name', roleName);
+
+    if (message.member.roles.has(role.id)) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
