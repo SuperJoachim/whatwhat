@@ -39,6 +39,8 @@ exports.updateMatches = function(action, args) {
         matchJson[matchHash] = {
             'opponent': '' + matchOpponent + '',
             'date': '' + matchMoment.format('YYYY-MM-DDTHH:mm') + '',
+            'played': false,
+            'result': '',
             'players': {
                 'yes': [],
                 'no': []
@@ -73,9 +75,58 @@ exports.updateMatches = function(action, args) {
             return 'Date format is not valid, use: YYYY-MM-DDTHH:MM eg 2018-05-20T20:00';
         }
 
-        matchJson[matchHash].date = matchMoment.format('YYYY-MM-DDTHH:mm');
-        updateMatchFile(matchJson);
-        response = 'Match **' + matchHash + '** has been moved!';
+        if (matchJson[matchHash]) {
+            matchJson[matchHash].date = matchMoment.format('YYYY-MM-DDTHH:mm');
+            updateMatchFile(matchJson);
+            response = 'Match **' + matchHash + '** has been moved!';
+        }
+        else {
+            response = 'Match **' + matchHash + '** not found!';
+        }
+    }
+
+    if (action == 'played') {
+        var matchHash = args[1];
+        var played = args[2];
+
+        if (played) {
+            played.trim();
+        }
+
+        if (!played || !(['yes', 'no'].indexOf(played) >= 0)) {
+            return 'Played can be true or false';
+        }
+
+        if (matchJson[matchHash]) {
+            matchJson[matchHash].played = played;
+            updateMatchFile(matchJson);
+            response = 'Match **' + matchHash + '** has been updated!';
+        }
+        else {
+            response = 'Match **' + matchHash + '** not found!';
+        }
+    }
+
+    if (action == 'result') {
+        var matchHash = args[1];
+        var matchResult = args[2];
+
+        if (matchResult) {
+            matchResult.trim();
+        }
+
+        if (!matchResult) {
+            return 'No result given.';
+        }
+
+        if (matchJson[matchHash]) {
+            matchJson[matchHash].result = matchResult;
+            updateMatchFile(matchJson);
+            response = 'Match **' + matchHash + '** has been updated!';
+        }
+        else {
+            response = 'Match **' + matchHash + '** not found!';
+        }
     }
 
     return response;
@@ -104,7 +155,12 @@ exports.getMatchSummary = function() {
             });
 
             response = response + '```diff\n';
-            response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() + ' (hash: ' + matchHash + ')\n';
+            response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() + ' (hash: ' + matchHash + ') \n\n';
+
+            if (matchData.played && matchData.played == 'yes') {
+                response = response + 'Result: ' + matchData.result + '\n\n';
+            }
+
             response = response + '+ ' + yes.join(', ') + '\n';
             response = response + '- ' + no.join(', ') + '\n';
             response = response + '```';
