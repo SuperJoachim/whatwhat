@@ -5,7 +5,16 @@ var     _               = require('lodash');
 var     moment          = require('moment');
 
 exports.getMatchHelp = function() {
-    return '**Commands:**\n**!match** - get a match list\n**!match yes/no <match hash>** - say yes/no for a match\n**!match add <date> <opponent>** - add a new match\n**!match remove <match hash>** - remove a match\n**!match help** - get this help list\n';
+    var commands = [
+        { name: 'match', desc: 'get a match list' },
+        { name: 'match yes/no <match hash>', desc: 'say yes/no for a match' },
+        { name: 'match add <date> <opponent>', desc: 'add a new match' },
+        { name: 'match remove <match hash', desc: 'remove a match' },
+        { name: 'match move <match hash> <date>', desc: 'move a match to a new time' },
+        { name: 'match help', desc: 'get this help list' },
+    ];
+
+    return '**Commands:**\n' + commands.map(cmd => '**!' + cmd.name + '** - ' + cmd.desc).join('\n') + '\n';
 }
 
 exports.updateMatches = function(action, args) {
@@ -53,6 +62,20 @@ exports.updateMatches = function(action, args) {
         else {
             response = 'Match **' + matchHash + '** not found!';
         }
+    }
+
+    if (action == 'move') {
+        var matchHash = args[1];
+        var matchDate = args[2];
+        var matchMoment = moment(matchDate);
+
+        if (!matchMoment.isValid()) {
+            return 'Date format is not valid, use: YYYY-MM-DDTHH:MM eg 2018-05-20T20:00';
+        }
+
+        matchJson[matchHash].date = matchMoment.format('YYYY-MM-DDTHH:mm');
+        updateMatchFile(matchJson);
+        response = 'Match **' + matchHash + '** has been moved!';
     }
 
     return response;
