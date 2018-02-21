@@ -141,8 +141,7 @@ exports.updateMatches = function(action, args) {
  * @return string
  */
 exports.getMatchSummary = function() {
-    var matchJson       = getMatchJson();
-    var matches         = sortMatchesByDate(matchJson);
+    var matches         = sortMatchesByDate(getMatchJson());
     var response        = 'Matches overview:\n';
 
     if (matches && _.size(matches) > 0) {
