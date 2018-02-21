@@ -142,10 +142,11 @@ exports.updateMatches = function(action, args) {
  */
 exports.getMatchSummary = function() {
     var matchJson       = getMatchJson();
+    var matches         = sortMatchesByDate(matchJson);
     var response        = 'Matches overview:\n';
 
-    if (!_.isEmpty(matchJson)) {
-        _.forEach(matchJson, function(matchData, matchHash) {
+    if (matches && _.size(matches) > 0) {
+        _.forEach(matches, function(matchData) {
             var yes = [];
             var no = [];
 
@@ -157,7 +158,7 @@ exports.getMatchSummary = function() {
             });
 
             response = response + '```diff\n';
-            response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() + ' (hash: ' + matchHash + ') \n\n';
+            response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() + ' (hash: ' + matchData.hash + ') \n\n';
 
             if (matchData.played && matchData.played == 'yes') {
                 response = response + 'Result: ' + matchData.result + '\n\n';
@@ -167,9 +168,8 @@ exports.getMatchSummary = function() {
             response = response + '- ' + no.join(', ') + '\n';
             response = response + '```';
         });
-    }
-    else {
-        response = 'No matches found.'
+    } else {
+        response = 'No matches found.';
     }
 
     response = response + '\n**Help:** !match help';
@@ -212,6 +212,19 @@ exports.updateMatch = function(author, action, matchHash) {
 
     return 'You said ' + action + '!';
 };
+
+/**
+ * Transform matchJson object to collection/array, sorted by date
+ * @param  object matchJson
+ * @return array
+ */
+function sortMatchesByDate(matchJson)
+{
+    return _.orderBy(_.mapValues(matchJson, function(match, hash) {
+        match.hash = hash;
+        return match;
+    }), ['date'], ['asc']);
+}
 
 /**
  * Update the json file.
