@@ -6,7 +6,8 @@ var     moment          = require('moment');
 
 exports.getMatchHelp = function() {
     var commands = [
-        { name: 'match', desc: 'get a match list' },
+        { name: 'match', desc: 'get upcoming matches' },
+        { name: 'match archive', desc: 'get a match list including played matches' },
         { name: 'match yes/no <match hash>', desc: 'say yes/no for a match' },
         { name: 'match add <date> <opponent>', desc: 'add a new match' },
         { name: 'match remove <match hash', desc: 'remove a match' },
@@ -134,18 +135,21 @@ exports.updateMatches = function(action, args) {
     return response;
 }
 
-
 /**
  * get a prac summary.
  *
  * @return string
  */
-exports.getMatchSummary = function() {
+exports.getMatchSummary = function(archive = false) {
     var matches         = sortMatchesByDate(getMatchJson());
     var response        = 'Matches overview:\n';
 
     if (matches && _.size(matches) > 0) {
         _.forEach(matches, function(matchData) {
+            if (matchData.played && !archive) {
+                return;
+            }
+
             var yes = [];
             var no = [];
 
