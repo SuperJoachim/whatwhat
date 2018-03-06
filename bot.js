@@ -181,6 +181,11 @@ client.on('message', message => {
             return;
         }
 
+        if (action == 'archive') {
+            respondToMessage(message, match.getMatchSummary(true));
+            return;
+        }
+
         if (action == 'help') {
             respondToMessage(message, match.getMatchHelp());
             return;
