@@ -19,6 +19,8 @@ var     cmd             = require('node-cmd');
 var     ytdl            = require('ytdl-core');
 var     pracJsonPath    = './prac/prac.json';
 var     matchJsonPath   = './match/match.json';
+var     logJson         = './log/log.json';
+var     log             = require('./log/log.js');
 
 /**
  * Constants
@@ -42,6 +44,11 @@ if (!fs.existsSync(pracJsonPath)){
 if (!fs.existsSync(matchJsonPath)){
     l('match file created');
     fs.writeFileSync(matchJsonPath, JSON.stringify({}));
+}
+
+if (!fs.existsSync(logJson)){
+    l('log file created');
+    fs.writeFileSync(logJson, JSON.stringify({}));
 }
 
 _.mixin({
@@ -68,6 +75,14 @@ client.on('message', message => {
     }
 
     var messageContent = message.content.trim().toLowerCase();
+
+    log.log(message);
+
+    // !waste
+    if (messageContent.indexOf('!waste') > -1) {
+        respondToMessage(message, log.getWaste());
+        return;
+    }
 
     // !say
     if (messageContent.indexOf('!say') > -1) {
