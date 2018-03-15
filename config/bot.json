@@ -6,7 +6,7 @@
   "imageUploadPath": "C:\\BotBilleder",
   "babePath": "C:\\whatbot\\babes.txt",
   "lastShownImage": "C:\\whatbot\\lastshown.txt",
-  "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png"],
+  "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png", "webp"],
   "pracGames": ["cs", "pubg"],
   "defaultPracGame": "cs",
   "csgoserver": "<your csgo server ip>",
