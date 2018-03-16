@@ -21,6 +21,7 @@ var     pracJsonPath    = './prac/prac.json';
 var     matchJsonPath   = './match/match.json';
 var     logJson         = './log/log.json';
 var     log             = require('./log/log.js');
+var     analimages      = require('./analytics/images.js');
 
 /**
  * Constants
@@ -125,6 +126,12 @@ client.on('message', message => {
 
         respondToMessage(message, rime.addRime(message.author, newRime));
 
+        return;
+    }
+
+    if (messageContent.indexOf('!lol') > -1) {
+        var imageToProcess = messageContent.replace('!lol ', '')
+        respondToMessage(message, analimages.analyzeImage(imageToProcess));
         return;
     }
 
