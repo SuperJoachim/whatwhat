@@ -1,10 +1,10 @@
-config/bot_dev.json
+/.*
+/prac/.*
+/config/.*
 /match/match.json
 /prac/prac.json
-/.DS_Store
-/config/.DS_Store
 /node_modules
-package-lock.json
 /Botbilleder
+package-lock.json
 lastshown.txt
 babes.txt
