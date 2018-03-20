@@ -3,36 +3,40 @@ var     fs              = require('fs');
 var     _               = require('lodash');
 var     moment          = require('moment');
 var     request         = require('request');
+var     rp              = require('request-promise');
 
-exports.analyzeImage = async function josTest() {
-    var sd = await analyzeImage2(args);
-    return lolifissen;
-}
 
-function analyzeImage2(args2) {
-    var tilDiscord = '..';
+
+exports.analyzeImage =  function analyzeImage(args) {
+    var returnStuff = "Joachim tester";
     var options = {
-        url: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/describe',
         method: 'POST',
+        uri: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/describe',
         headers: {
             'Content-Type': 'application/json',
             'Ocp-Apim-Subscription-Key': '56595276d84149a895eafa7b64ff729a'
-          },
-        json: {
-          "url": args2
-        }
+        },
+        body: {
+            'url': args
+        },
+        json: true // Automatically stringifies the body to JSON
     };
-    request.post(options, function (error, response, body) {
-        if(error)
-        {
-            console.log("Noget gik galt");
-            tilDiscord = tilDiscord + "LOL I FISSEN!! FEJL FEJL !";
-        }
+    
+    rp(options)
+        .then(function (parsedBody) {
+            returnStuff = parsedBody['description']['captions'][0]['text'];
+            console.log(returnStuff);
+            //returnStuff = "Anal";
+            return returnStuff;
 
-        //var temp = body['description']['captions']
-        console.log(body['description']['captions'][0]['text']);
-        tilDiscord = tilDiscord + body['description']['captions'][0]['text'];
-        return "ASDASF";
-
-      });
+        })
+        .catch(function (err) {
+            console.log(err);
+            return "Noget gik galt, nigga";
+        })
+        .finally(function () {
+            console.log("efter alt det lort");
+            return "kage";
+            
+        });
 }

@@ -14,7 +14,8 @@
     "request": "^2.83.0",
     "srcds-rcon": "^2.2.1",
     "uuid": "^3.2.1",
-    "ytdl-core": "^0.20.0"
+    "ytdl-core": "^0.20.0",
+    "request-promise": "^4.2.2"
   },
   "devDependencies": {},
   "scripts": {
