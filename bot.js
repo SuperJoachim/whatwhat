@@ -129,8 +129,8 @@ client.on('message', message => {
         return;
     }
 
-    if (messageContent.indexOf('!lol') > -1) {
-        var imageToProcess = messageContent.replace('!lol ', '')
+    if (messageContent.indexOf('!anal') > -1) {
+        var imageToProcess = messageContent.replace('!anal ', '')
         respondToMessage(message, analimages.analyzeImage(imageToProcess));
         return;
     }
@@ -405,7 +405,8 @@ client.on('message', message => {
             fs.writeFileSync(localPath, data);
         });
 
-        respondToMessage(message, 'Billede uploadet');
+        respondToMessage(message, analimages.analyzeImage(messageContent));
+        //respondToMessage(message, 'Billede uploadet');
     }
 });
 

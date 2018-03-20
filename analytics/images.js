@@ -6,8 +6,8 @@ var     request         = require('request');
 var     rp              = require('request-promise');
 
 
-//exports.analyzeImage =  function analyzeImage(args) {
 exports.analyzeImage =  function(args) {
+
     var returnStuff = "Joachim tester";
     var options = {
         method: 'POST',
@@ -19,8 +19,9 @@ exports.analyzeImage =  function(args) {
         body: {
             'url': args
         },
-        json: true // Automatically stringifies the body to JSON
+        json: true
     };
+    
     
     rp(options)
         .then(function (parsedBody) {
@@ -39,4 +40,5 @@ exports.analyzeImage =  function(args) {
             return "kage";
             
         });
-}
+        //return returnStuff;
+    }
