@@ -1,0 +1,14 @@
+{
+  "prefix": "bot",
+  "id": "327095592473853954",
+  "token": "MzI3MDk1NTkyNDczODUzOTU0.DUohJw.FQOoGfLJFx4TAN9nDzeNx3Ptlvk",
+  "commandTrigger": "!",
+  "imageUploadPath": "BotBilleder",
+  "babePath": "babes.txt",
+  "lastShownImage": "lastshown.txt",
+  "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png", "webp"],
+  "pracGames": ["cs", "pubg"],
+  "defaultPracGame": "cs",
+  "csgoserver": "<your csgo server ip>",
+  "rcon": "<your rcon password>"
+}
