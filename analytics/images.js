@@ -6,8 +6,8 @@ var     request         = require('request');
 var     rp              = require('request-promise');
 
 
-
-exports.analyzeImage =  function analyzeImage(args) {
+//exports.analyzeImage =  function analyzeImage(args) {
+exports.analyzeImage =  function(args) {
     var returnStuff = "Joachim tester";
     var options = {
         method: 'POST',
