@@ -22,6 +22,8 @@ var     matchJsonPath   = './match/match.json';
 var     logJson         = './log/log.json';
 var     log             = require('./log/log.js');
 var     analimages      = require('./analytics/images.js');
+var     rp              = require('request-promise');
+
 
 /**
  * Constants
@@ -131,9 +133,36 @@ client.on('message', message => {
 
     if (messageContent.indexOf('!anal') > -1) {
         var imageToProcess = messageContent.replace('!anal ', '')
-        respondToMessage(message, analimages.analyzeImage(imageToProcess));
+
+        var returnStuff = "Joachim tester";
+        var options = {
+            method: 'POST',
+            uri: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/describe',
+            headers: {
+                'Content-Type': 'application/json',
+                'Ocp-Apim-Subscription-Key': botConfig.imageApiKey
+            },
+            body: {
+                'url': imageToProcess
+            },
+            json: true
+        };
+
+        rp(options)
+        .then(function (parsedBody) {
+            returnStuff = parsedBody['description']['captions'][0]['text'];
+            respondToMessage(message, returnStuff);
+            return;
+
+        })
+        .catch(function (err) {
+            console.log(err);
+            return;
+        });
         return;
     }
+  
+    
 
     // !prac
     if (messageContent.indexOf('!prac') > -1) {

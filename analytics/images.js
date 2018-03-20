@@ -1,3 +1,5 @@
+var     botConfig       = require('../config/bot.json');
+
 var     exports         = module.exports = {};
 var     fs              = require('fs');
 var     _               = require('lodash');
@@ -14,7 +16,7 @@ exports.analyzeImage =  function(args) {
         uri: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/describe',
         headers: {
             'Content-Type': 'application/json',
-            'Ocp-Apim-Subscription-Key': '56595276d84149a895eafa7b64ff729a'
+            'Ocp-Apim-Subscription-Key': botConfig.imageApiKey
         },
         body: {
             'url': args

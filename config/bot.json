@@ -10,5 +10,6 @@
   "pracGames": ["cs", "pubg"],
   "defaultPracGame": "cs",
   "csgoserver": "<your csgo server ip>",
-  "rcon": "<your rcon password>"
+  "rcon": "<your rcon password>",
+  "imageApiKey": "<your image api>"
 }
