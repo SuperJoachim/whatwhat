@@ -434,8 +434,7 @@ client.on('message', message => {
             fs.writeFileSync(localPath, data);
         });
 
-        respondToMessage(message, analimages.analyzeImage(messageContent));
-        //respondToMessage(message, 'Billede uploadet');
+        respondToMessage(message, 'Billede uploadet');
     }
 });
 
