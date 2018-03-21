@@ -134,35 +134,20 @@ client.on('message', message => {
     if (messageContent.indexOf('!anal') > -1) {
         var imageToProcess = messageContent.replace('!anal ', '')
 
-        var returnStuff = "Joachim tester";
-        var options = {
-            method: 'POST',
-            uri: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/describe',
-            headers: {
-                'Content-Type': 'application/json',
-                'Ocp-Apim-Subscription-Key': botConfig.imageApiKey
-            },
-            body: {
-                'url': imageToProcess
-            },
-            json: true
-        };
+        analimages.analyzeImage(imageToProcess)
+            .then(function(captions) {
+                if(captions.length > 0) {
+                    var returnMsg = 'Image captions: '
+                    + captions.map(function (caption) {
+                        return caption.text + ' (' + caption.confidence.toFixed(2) + ')';
+                    }).join(', ');
+                    respondToMessage(message, returnMsg); 
+                }
+            })
+            .catch(function(error) {});
 
-        rp(options)
-        .then(function (parsedBody) {
-            returnStuff = parsedBody['description']['captions'][0]['text'];
-            respondToMessage(message, returnStuff);
-            return;
-
-        })
-        .catch(function (err) {
-            console.log(err);
-            return;
-        });
         return;
     }
-  
-    
 
     // !prac
     if (messageContent.indexOf('!prac') > -1) {
