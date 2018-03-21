@@ -21,6 +21,9 @@ var     pracJsonPath    = './prac/prac.json';
 var     matchJsonPath   = './match/match.json';
 var     logJson         = './log/log.json';
 var     log             = require('./log/log.js');
+var     analimages      = require('./analytics/images.js');
+var     rp              = require('request-promise');
+
 
 /**
  * Constants
@@ -124,6 +127,19 @@ client.on('message', message => {
         }
 
         respondToMessage(message, rime.addRime(message.author, newRime));
+
+        return;
+    }
+
+    // !anal
+    if (messageContent.indexOf('!anal') > -1) {
+        var imageToProcess = messageContent.replace('!anal ', '')
+
+        analimages.analyzeImage(imageToProcess)
+            .then(function(description) {
+                respondToMessage(message, description); 
+            })
+            .catch(function(error) {});
 
         return;
     }
@@ -393,6 +409,12 @@ client.on('message', message => {
     if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1) {
         var billedenavn = uuid() + '.' + imageExtension;
         var localPath = imagePath + billedenavn;
+        
+        analimages.analyzeImage(messageContent)
+            .then(function(description) {
+                respondToMessage(message, description); 
+            })
+            .catch(function(error) {});
 
         download(messageContent).then(data => {
             fs.writeFileSync(localPath, data);
