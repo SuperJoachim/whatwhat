@@ -131,38 +131,18 @@ client.on('message', message => {
         return;
     }
 
+    // !anal
     if (messageContent.indexOf('!anal') > -1) {
         var imageToProcess = messageContent.replace('!anal ', '')
 
-        var returnStuff = "Joachim tester";
-        var options = {
-            method: 'POST',
-            uri: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/describe',
-            headers: {
-                'Content-Type': 'application/json',
-                'Ocp-Apim-Subscription-Key': botConfig.imageApiKey
-            },
-            body: {
-                'url': imageToProcess
-            },
-            json: true
-        };
+        analimages.analyzeImage(imageToProcess)
+            .then(function(description) {
+                respondToMessage(message, description); 
+            })
+            .catch(function(error) {});
 
-        rp(options)
-        .then(function (parsedBody) {
-            returnStuff = parsedBody['description']['captions'][0]['text'];
-            respondToMessage(message, returnStuff);
-            return;
-
-        })
-        .catch(function (err) {
-            console.log(err);
-            return;
-        });
         return;
     }
-  
-    
 
     // !prac
     if (messageContent.indexOf('!prac') > -1) {
@@ -429,6 +409,12 @@ client.on('message', message => {
     if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1) {
         var billedenavn = uuid() + '.' + imageExtension;
         var localPath = imagePath + billedenavn;
+        
+        analimages.analyzeImage(messageContent)
+            .then(function(description) {
+                respondToMessage(message, description); 
+            })
+            .catch(function(error) {});
 
         download(messageContent).then(data => {
             fs.writeFileSync(localPath, data);
