@@ -15,7 +15,8 @@
     "srcds-rcon": "^2.2.1",
     "uuid": "^3.2.1",
     "ytdl-core": "^0.20.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "azure-storage": "^2.8.1"
   },
   "devDependencies": {},
   "scripts": {
