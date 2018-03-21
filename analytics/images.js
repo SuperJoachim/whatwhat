@@ -28,7 +28,7 @@ exports.analyzeImage =  function(imageUrl) {
                 var returnMsg = 'På billedet ses: ';
                 if (parsedBody.description.captions.length > 0) {
                     returnMsg += parsedBody.description.captions.map(function (caption) {
-                        return caption.text + ' (' + caption.confidence.toFixed(2) + ')';
+                        return caption.text;
                     }).join(', ');
                 }
                 resolve(returnMsg);
