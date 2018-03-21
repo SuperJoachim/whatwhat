@@ -8,9 +8,7 @@ var     request         = require('request');
 var     rp              = require('request-promise');
 
 
-exports.analyzeImage =  function(args) {
-
-    var returnStuff = "Joachim tester";
+exports.analyzeImage =  function(imageUrl) {
     var options = {
         method: 'POST',
         uri: 'https://westeurope.api.cognitive.microsoft.com/vision/v1.0/describe',
@@ -19,28 +17,19 @@ exports.analyzeImage =  function(args) {
             'Ocp-Apim-Subscription-Key': botConfig.imageApiKey
         },
         body: {
-            'url': args
+            'url': imageUrl
         },
         json: true
     };
-    
-    
-    rp(options)
-        .then(function (parsedBody) {
-            returnStuff = parsedBody['description']['captions'][0]['text'];
-            console.log(returnStuff);
-            //returnStuff = "Anal";
-            return returnStuff;
 
-        })
-        .catch(function (err) {
-            console.log(err);
-            return "Noget gik galt, nigga";
-        })
-        .finally(function () {
-            console.log("efter alt det lort");
-            return "kage";
-            
-        });
-        //return returnStuff;
-    }
+    return new Promise(function(resolve, reject) {
+        rp(options)
+            .then(function (parsedBody) {
+                resolve(parsedBody.description.captions);
+            })
+            .catch(function (err) {
+                // console.log('FEJL', err);
+                reject(err);
+            });
+    });
+}
