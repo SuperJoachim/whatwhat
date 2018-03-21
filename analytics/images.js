@@ -25,7 +25,13 @@ exports.analyzeImage =  function(imageUrl) {
     return new Promise(function(resolve, reject) {
         rp(options)
             .then(function (parsedBody) {
-                resolve(parsedBody.description.captions);
+                var returnMsg = 'På billedet ses: ';
+                if (parsedBody.description.captions.length > 0) {
+                    returnMsg += parsedBody.description.captions.map(function (caption) {
+                        return caption.text + ' (' + caption.confidence.toFixed(2) + ')';
+                    }).join(', ');
+                }
+                resolve(returnMsg);
             })
             .catch(function (err) {
                 // console.log('FEJL', err);
