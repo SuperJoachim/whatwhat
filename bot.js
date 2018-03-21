@@ -131,18 +131,13 @@ client.on('message', message => {
         return;
     }
 
+    // !anal
     if (messageContent.indexOf('!anal') > -1) {
         var imageToProcess = messageContent.replace('!anal ', '')
 
         analimages.analyzeImage(imageToProcess)
-            .then(function(captions) {
-                if(captions.length > 0) {
-                    var returnMsg = 'Image captions: '
-                    + captions.map(function (caption) {
-                        return caption.text + ' (' + caption.confidence.toFixed(2) + ')';
-                    }).join(', ');
-                    respondToMessage(message, returnMsg); 
-                }
+            .then(function(description) {
+                respondToMessage(message, description); 
             })
             .catch(function(error) {});
 
@@ -414,6 +409,12 @@ client.on('message', message => {
     if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1) {
         var billedenavn = uuid() + '.' + imageExtension;
         var localPath = imagePath + billedenavn;
+        
+        analimages.analyzeImage(messageContent)
+            .then(function(description) {
+                respondToMessage(message, description); 
+            })
+            .catch(function(error) {});
 
         download(messageContent).then(data => {
             fs.writeFileSync(localPath, data);
