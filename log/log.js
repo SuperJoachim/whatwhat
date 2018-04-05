@@ -8,18 +8,23 @@ var     moment          = require('moment');
 exports.log = function(message) {
     var logJson     = getLogJson();
     var userId      = message.author.id;
+    var guildId     = message.guild.id;
     var username    = message.author.username;
     var time        = new Date();
     var today       = time.getFullYear() + '-'
                       + ('0' + (time.getMonth()+1)).slice(-2) + '-'
                       + ('0' + time.getDate()).slice(-2);
 
-    if (logJson[today] == undefined) {
-        logJson[today] = {};
+    if (logJson[guildId] == undefined) {
+        logJson[guildId] = {};
     }
 
-    if (logJson[today][userId] == undefined) {
-        logJson[today][userId] = {
+    if (logJson[guildId][today] == undefined) {
+        logJson[guildId][today] = {};
+    }
+
+    if (logJson[guildId][today][userId] == undefined) {
+        logJson[guildId][today][userId] = {
             'username': username,
             'wordcount': 0,
             'secs_wasted': 0,
@@ -27,27 +32,28 @@ exports.log = function(message) {
     }
 
     // See http://smallbusiness.chron.com/good-typing-speed-per-minute-71789.html
-    var averageWPM = 40;
-    var averageSPW = 60/40;
+    var averageWPM = 15;
+    var averageSPW = 60/averageWPM;
     var wordCount = message.content.trim().toLowerCase().split(' ').length;
     var secs_wasted = wordCount * averageSPW;
 
-    logJson[today][userId].wordcount += wordCount;
-    logJson[today][userId].secs_wasted += secs_wasted;
+    logJson[guildId][today][userId].wordcount += wordCount;
+    logJson[guildId][today][userId].secs_wasted += secs_wasted;
 
     update(logJson);
 }
 
-exports.getWaste = function() {
+exports.getWaste = function(message) {
     var logJson     = getLogJson();
+    var guildId     = message.guild.id;
     var response    = 'Time wasted on Discord today:\n';
     var time        = new Date();
     var today       = time.getFullYear() + '-'
                       + ('0' + (time.getMonth()+1)).slice(-2) + '-'
                       + ('0' + time.getDate()).slice(-2);
 
-    if (logJson && _.size(logJson[today]) > 0) {
-        _.forEach(logJson[today], function(logData) {
+    if (logJson && _.size(logJson[guildId][today]) > 0) {
+        _.forEach(logJson[guildId][today], function(logData) {
             var label = 'seconds';
             var wasted = logData.secs_wasted;
 
