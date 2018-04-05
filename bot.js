@@ -83,7 +83,7 @@ client.on('message', message => {
 
     // !waste
     if (messageContent.indexOf('!waste') > -1) {
-        respondToMessage(message, log.getWaste());
+        respondToMessage(message, log.getWaste(message));
         return;
     }
 
@@ -137,7 +137,7 @@ client.on('message', message => {
 
         analimages.analyzeImage(imageToProcess)
             .then(function(description) {
-                respondToMessage(message, description); 
+                respondToMessage(message, description);
             })
             .catch(function(error) {});
 
@@ -409,10 +409,10 @@ client.on('message', message => {
     if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1) {
         var billedenavn = uuid() + '.' + imageExtension;
         var localPath = imagePath + billedenavn;
-        
+
         analimages.analyzeImage(messageContent)
             .then(function(description) {
-                respondToMessage(message, description); 
+                respondToMessage(message, description);
             })
             .catch(function(error) {});
 

@@ -3,6 +3,7 @@
 /config/.*
 /match/match.json
 /prac/prac.json
+/log/log.json
 /node_modules
 /Botbilleder
 package-lock.json
