@@ -21,6 +21,7 @@ var     pracJsonPath    = './prac/prac.json';
 var     matchJsonPath   = './match/match.json';
 var     logJson         = './log/log.json';
 var     log             = require('./log/log.js');
+var     tacs            = require('./tacs/tacs.js');
 var     analimages      = require('./analytics/images.js');
 var     rp              = require('request-promise');
 
@@ -80,6 +81,20 @@ client.on('message', message => {
     var messageContent = message.content.trim().toLowerCase();
 
     log.log(message);
+
+    // !tacs
+    if (messageContent.indexOf('!tacs') > -1) {
+        var map = tacs.getTacs(message);
+
+        if (fs.existsSync(map)) {
+            respondToMessageWithFile(message, map);
+        }
+        else {
+            respondToMessage(message, tacs.getTacList());
+        }
+
+        return;
+    }
 
     // !waste
     if (messageContent.indexOf('!waste') > -1) {
@@ -428,7 +443,20 @@ client.on('message', message => {
 client.login(botConfig.token);
 
 /**
+ * Respond to a message with a file
+ *
+ * @param  Message  message
+ * @param  string   response
+ *
+ * @return void
+ */
+function respondToMessageWithFile(message, response) {
+    message.channel.sendFile(response);
+}
+
+/**
  * Respond to a message
+ *
  * @param  Message  message
  * @param  string   response
  *
@@ -440,6 +468,7 @@ function respondToMessage(message, response) {
 
 /**
  * Respond to a message with TTS
+ *
  * @param  Message  message
  * @param  string   response
  *
