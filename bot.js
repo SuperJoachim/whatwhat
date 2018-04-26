@@ -70,10 +70,6 @@ client.on('ready', () => {
     //ClientUser.setStatus("online", "Din mor");
 });
 
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
 /**
  * On message
  */
@@ -514,6 +510,15 @@ function authorHasRole(message, roleName = '') {
     }
 
     return false;
+}
+
+/**
+ * Check if value is numeric
+ *
+  * @return boolean
+ */
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 /**

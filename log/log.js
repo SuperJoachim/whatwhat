@@ -67,20 +67,6 @@ exports.getWaste = function(message) {
 
             wasted = hDisplay + mDisplay + sDisplay;
 
-            // var label = 'seconds';
-            // var wasted = logData.secs_wasted;
-
-            // if (logData.secs_wasted > 60) {
-            //     label = 'minutes';
-            //     wasted = wasted/60;
-            //     wasted = wasted.toFixed(1);
-            // }
-            // if (logData.secs_wasted > 3600) {
-            //     label = 'hours';
-            //     wasted = wasted/3600;
-            //     wasted = wasted.toFixed(2);
-            // }
-
             response = response + '```diff\n';
             response = response + logData.username + ': ' + wasted + ' wasted (' + logData.wordcount + ' words) \n\n';
             response = response + '```';
