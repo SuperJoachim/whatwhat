@@ -54,22 +54,35 @@ exports.getWaste = function(message) {
 
     if (logJson && _.size(logJson[guildId][today]) > 0) {
         _.forEach(logJson[guildId][today], function(logData) {
-            var label = 'seconds';
-            var wasted = logData.secs_wasted;
+            var wasted = '';
 
-            if (logData.secs_wasted > 60) {
-                label = 'minutes';
-                wasted = wasted/60;
-                wasted = wasted.toFixed(1);
-            }
-            if (logData.secs_wasted > 3600) {
-                label = 'hours';
-                wasted = (wasted/60)/60;
-                wasted = wasted.toFixed(2);
-            }
+            d = Number(logData.secs_wasted);
+            var h = Math.floor(d / 3600);
+            var m = Math.floor(d % 3600 / 60);
+            var s = Math.floor(d % 3600 % 60);
+
+            var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+            var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+            var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+
+            wasted = hDisplay + mDisplay + sDisplay;
+
+            // var label = 'seconds';
+            // var wasted = logData.secs_wasted;
+
+            // if (logData.secs_wasted > 60) {
+            //     label = 'minutes';
+            //     wasted = wasted/60;
+            //     wasted = wasted.toFixed(1);
+            // }
+            // if (logData.secs_wasted > 3600) {
+            //     label = 'hours';
+            //     wasted = wasted/3600;
+            //     wasted = wasted.toFixed(2);
+            // }
 
             response = response + '```diff\n';
-            response = response + logData.username + ': ' + wasted + ' ' + label + ' wasted (' + logData.wordcount + ' words) \n\n';
+            response = response + logData.username + ': ' + wasted + ' wasted (' + logData.wordcount + ' words) \n\n';
             response = response + '```';
         });
     } else {
