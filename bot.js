@@ -22,6 +22,7 @@ var     matchJsonPath   = './match/match.json';
 var     logJson         = './log/log.json';
 var     log             = require('./log/log.js');
 var     tacs            = require('./tacs/tacs.js');
+var     call            = require('./call/call.js');
 var     analimages      = require('./analytics/images.js');
 var     rp              = require('request-promise');
 
@@ -81,6 +82,21 @@ client.on('message', message => {
     var messageContent = message.content.trim().toLowerCase();
 
     log.log(message);
+
+    // !call
+    if (messageContent.indexOf('!call') > -1) {
+        var customDiversions = messageContent.replace('!call', '').trim().toLowerCase();
+
+        if (customDiversions) {
+            if (!isNumeric(customDiversions) || customDiversions > 5) {
+                respondToMessage(message, 'Use: !call <1-5>');
+                return;
+            }
+        }
+
+        respondToMessageTTS(message, call.getCall(customDiversions));
+        return;
+    }
 
     // !tacs
     if (messageContent.indexOf('!tacs') > -1) {
@@ -494,6 +510,15 @@ function authorHasRole(message, roleName = '') {
     }
 
     return false;
+}
+
+/**
+ * Check if value is numeric
+ *
+  * @return boolean
+ */
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 /**

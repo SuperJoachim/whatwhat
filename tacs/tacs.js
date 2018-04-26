@@ -12,7 +12,7 @@ exports.getTacs = function(message) {
 }
 
 exports.getTacList = function() {
-    return 'Nahh bicth, try canals, cbble, dust2, inferno, mirage, nuke, office, overpass or train';
+    return 'Nahh bitch, try cbble, inferno, mirage, overpass or train';
 }
 
 /**

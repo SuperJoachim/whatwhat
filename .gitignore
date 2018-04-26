@@ -1,4 +1,6 @@
 /.*
+/tacs/.*
+/call/.*
 /prac/.*
 /config/.*
 /match/match.json
