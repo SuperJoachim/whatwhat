@@ -94,7 +94,7 @@ client.on('message', message => {
             }
         }
 
-        respondToMessage(message, call.getCall(customDiversions));
+        respondToMessageTTS(message, call.getCall(customDiversions));
         return;
     }
 
