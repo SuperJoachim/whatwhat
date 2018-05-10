@@ -30,6 +30,7 @@ exports.getPracSummary = function() {
         _.forEach(pracToday, function(gamePrac, gameKey) {
             var yes = [];
             var no = [];
+            var maybe = [];
 
             _.forEach(gamePrac['yes'], function(player) {
                 yes.push(_.values(player)[0]);
@@ -38,14 +39,14 @@ exports.getPracSummary = function() {
                 no.push(_.values(player)[0]);
             });
             _.forEach(gamePrac['maybe'], function(player) {
-                no.push(_.values(player)[0]);
+                maybe.push(_.values(player)[0]);
             });
 
             response = response + '```diff\n';
             response = response + gameKey.toUpperCase() + '\n';
             response = response + '+ ' + yes.join(', ') + '\n';
             response = response + '- ' + no.join(', ') + '\n';
-            response = response + '--- maybe: ' + no.join(', ') + '\n';
+            response = response + '--- maybe: ' + maybe.join(', ') + '\n';
             response = response + '```';
         });
     }
