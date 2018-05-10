@@ -126,6 +126,10 @@ client.on('message', message => {
             count = 100;
         }
 
+        if (!count) {
+            count = 1;
+        }
+
         var sayTxt = messageContent.replace('!say', '').replace(count, '');
 
         var response = '';
