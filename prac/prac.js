@@ -37,11 +37,15 @@ exports.getPracSummary = function() {
             _.forEach(gamePrac['no'], function(player) {
                 no.push(_.values(player)[0]);
             });
+            _.forEach(gamePrac['maybe'], function(player) {
+                no.push(_.values(player)[0]);
+            });
 
             response = response + '```diff\n';
             response = response + gameKey.toUpperCase() + '\n';
             response = response + '+ ' + yes.join(', ') + '\n';
             response = response + '- ' + no.join(', ') + '\n';
+            response = response + '--- maybe: ' + no.join(', ') + '\n';
             response = response + '```';
         });
     }
@@ -160,7 +164,7 @@ exports.updatePrac = function(author, action, game) {
     }
 
     if (pracJson[today][game] == undefined) {
-        pracJson[today][game] = {"yes":[], "no":[]};
+        pracJson[today][game] = {"yes":[], "no":[], "maybe":[]};
     }
 
     // Check if exists.
@@ -168,24 +172,26 @@ exports.updatePrac = function(author, action, game) {
         return 'You f***! You already said ' + action;
     }
 
+    _.remove(pracJson[today][game]['yes'], function(e) {
+        return Object.keys(e)[0] == userId;
+    });
+    _.remove(pracJson[today][game]['no'], function(e) {
+        return Object.keys(e)[0] == userId;
+    });
+    _.remove(pracJson[today][game]['maybe'], function(e) {
+        return Object.keys(e)[0] == userId;
+    });
+
     if (action == 'remove') {
-        _.remove(pracJson[today][game]['yes'], function(e) {
-            return Object.keys(e)[0] == userId;
-        });
-        _.remove(pracJson[today][game]['no'], function(e) {
-            return Object.keys(e)[0] == userId;
-        });
-
         updatePracFile(pracJson);
-
         return 'You have been removed.';
     }
 
-    var oppositeAction = action == 'yes' ? 'no' : 'yes';
+    // var oppositeAction = action == 'yes' ? 'no' : 'yes';
 
-    _.remove(pracJson[today][game][oppositeAction], function(e) {
-        return Object.keys(e)[0] == userId;
-    });
+    // _.remove(pracJson[today][game][oppositeAction], function(e) {
+    //     return Object.keys(e)[0] == userId;
+    // });
 
     // Add to dataset.
     pracJson[today][game][action].push(player);
