@@ -88,8 +88,13 @@ function update(json) {
         l('JSON not valid.');
     }
     else {
-        fs.writeFile(logJson, JSON.stringify(json));
+        try {
+            fs.writeFile(logJson, JSON.stringify(json));
+        } catch (e) {
+            l('Failed writing log.');
+        }
     }
+    l('Log recorded.');
 }
 
 /**
