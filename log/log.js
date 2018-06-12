@@ -53,7 +53,15 @@ exports.getWaste = function(message) {
                       + ('0' + time.getDate()).slice(-2);
 
     if (logJson && _.size(logJson[guildId][today]) > 0) {
-        _.forEach(logJson[guildId][today], function(logData) {
+        var wasters = _.sortBy(logJson[guildId][today], function(item) {
+            return -item.secs_wasted;
+        })
+
+        var firstSet = false;
+
+        response = response + '```diff\n';
+
+        _.forEach(wasters, function(logData) {
             var wasted = '';
 
             d = Number(logData.secs_wasted);
@@ -67,10 +75,16 @@ exports.getWaste = function(message) {
 
             wasted = hDisplay + mDisplay + sDisplay;
 
-            response = response + '```diff\n';
-            response = response + logData.username + ': ' + wasted + ' wasted (' + logData.wordcount + ' words) \n\n';
-            response = response + '```';
+            var prefix = firstSet ? '- Waste noob ' : '+ Waste King ';
+
+            response = response + prefix + logData.username + ', ' + wasted + ' (' + logData.wordcount + ' words) \n\n';
+
+            if (!firstSet) {
+                firstSet = true;
+            }
         });
+
+        response = response + '```';
     } else {
         response = 'No time wasted today.';
     }
@@ -89,7 +103,7 @@ function update(json) {
     }
     else {
         try {
-            fs.writeFile(logJson, JSON.stringify(json));
+            fs.writeFileSync(logJson, JSON.stringify(json));
         } catch (e) {
             l('Failed writing log.');
         }
