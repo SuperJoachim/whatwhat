@@ -25,7 +25,8 @@ var     tacs            = require('./tacs/tacs.js');
 var     call            = require('./call/call.js');
 var     analimages      = require('./analytics/images.js');
 var     rp              = require('request-promise');
-
+var     azurestorage    = require('azure-storage');
+var     blobService     = azure.createBlobService();
 
 /**
  * Constants
@@ -36,6 +37,7 @@ const   download        = require('download');
 const   imagePath       = path.join(botConfig.imageUploadPath + '\\');
 const   babesfile       = botConfig.babePath;
 const   lastshownfile   = botConfig.lastShownImage;
+
 
 if (!fs.existsSync(imagePath)){
     fs.mkdirSync(imagePath)
@@ -432,10 +434,29 @@ client.on('message', message => {
             var billedeRandom = Math.floor(Math.random() * (items.length - 0 + 1));
             var billedeToSend = items[billedeRandom];
             message.channel.sendFile(path + '/' + billedeToSend);
-            fs.writeFile(lastshownfile, path + billedeToSend);
+            fs.writeFile(lastshownfile, path + billedeToSend);   
         });
 
         return;
+    }
+
+    // new whaat?
+    if(messageContent === 'whaat2?') {
+        
+        const list = () => {
+            return new Promise((resolve, reject) => {
+                blobService.listBlobsSegmented("whaatimages", null, (err, data) => {
+                    if(err) {
+                        reject(err);
+                    } else {
+                        l(data);
+                    }
+                });
+            });
+        };
+
+
+
     }
 
     // image upload
