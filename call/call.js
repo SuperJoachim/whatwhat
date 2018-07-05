@@ -3,7 +3,7 @@ var     _               = require('lodash');
 var     maxPlayers      = 5;
 var     maxDiversions   = 5;
 var     actions         = ['rush', 'push', 'go slow to', 'go fast to', 'peak', 'hold', 'protect', 'smoke', 'flash', 'nade', 'fake', 'fake rush', 'fake plant', 'plant', 'make noise'];
-var     areas           = ['A site', 'B site', 'middle', 'connector'];
+var     areas           = ['A site', 'B site', 'middle', 'connector', 'fissen'];
 
 exports.getCall = function(customDiversions) {
     var diversions              = _.random(1, maxDiversions);
