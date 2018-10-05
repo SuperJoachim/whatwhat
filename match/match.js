@@ -276,7 +276,7 @@ function mapWins() {
     var maps = {};
     var matchJson = getMatchJson();
     for (var hash in matchJson) {
-        if (matchJson[hash].result !== undefined && matchJson[hash].map !== undefined) {
+        if (matchJson[hash].result !== undefined && matchJson[hash].map !== undefined && matchJson[hash].map) {
             if (maps[matchJson[hash].map] === undefined) {
                 maps[matchJson[hash].map] = { results: [] }; 
             }
