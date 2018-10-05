@@ -44,6 +44,7 @@ exports.updateMatches = function(action, args) {
             'date': '' + matchMoment.format('YYYY-MM-DDTHH:mm') + '',
             'played': false,
             'result': '',
+            'map': '',
             'players': {
                 'yes': [],
                 'no': []
