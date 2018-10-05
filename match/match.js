@@ -44,6 +44,7 @@ exports.updateMatches = function(action, args) {
             'date': '' + matchMoment.format('YYYY-MM-DDTHH:mm') + '',
             'played': false,
             'result': '',
+            'map': '',
             'players': {
                 'yes': [],
                 'no': []
@@ -132,6 +133,26 @@ exports.updateMatches = function(action, args) {
         }
     }
 
+    if (action == 'map') {
+        var matchHash = args[1];
+        var mapName = args[2];
+
+        if (mapName) {
+            mapName = normalizeMap(mapName);
+        } else {
+            return 'No map given.';
+        }
+
+        if (matchJson[matchHash]) {
+            matchJson[matchHash].map = mapName;
+            updateMatchFile(matchJson);
+            response = 'Match **' + matchHash + '** has been updated!';
+        }
+        else {
+            response = 'Match **' + matchHash + '** not found!';
+        }
+    }
+
     return response;
 }
 
@@ -161,7 +182,9 @@ exports.getMatchSummary = function(archive = false) {
             });
 
             response = response + '```diff\n';
-            response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() + ' (hash: ' + matchData.hash + ') \n\n';
+            response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() 
+                + (matchData.map !== undefined ? ' @ ' + matchData.map.toUpperCase() : '') 
+                + ' (hash: ' + matchData.hash + ') \n\n';
 
             if (matchData.played && matchData.played == 'yes') {
                 response = response + 'Result: ' + matchData.result + '\n\n';
@@ -215,6 +238,67 @@ exports.updateMatch = function(author, action, matchHash) {
 
     return 'You said ' + action + '!';
 };
+
+/**
+ * Get map winrate.
+ *
+ * @param  author
+ * @param  action
+ *
+ * @return void
+ */
+exports.winRate = function (mapName = null) {
+    var maps = mapWins();
+    if (mapName) {
+        mapName = normalizeMap(mapName);
+        if (mapName === 'canals') {
+            return 'canals win rate: HUNDREDE PROCENT!!!';
+        }
+        if (maps[mapName] === undefined) {
+            return 'Found no matches on ' + mapName;
+        }
+        return mapName + ' win rate: ' + maps[mapName].winrate + '%';
+    } else {
+        var response = '```\n' + 'WIN RATES\n';
+        for (var map in maps) {
+            response += map + ': ' + maps[map].winrate + '%\n';
+        }
+        response += 'canals: HUNDREDE PROCENT!!!\n';
+        response += '```';
+        return response;
+    }
+};
+
+/**
+ * Find result and win rates for all maps
+ */
+function mapWins() {
+    var maps = {};
+    var matchJson = getMatchJson();
+    for (var hash in matchJson) {
+        if (matchJson[hash].result !== undefined && matchJson[hash].map !== undefined && matchJson[hash].map) {
+            if (maps[matchJson[hash].map] === undefined) {
+                maps[matchJson[hash].map] = { results: [] }; 
+            }
+            var result = matchJson[hash].result.split('-');
+            maps[matchJson[hash].map].results.push(parseInt(result[0]) > parseInt(result[1]));
+        }
+    }
+    for (var map in maps) {
+        maps[map].winrate = maps[map].results.filter(function (result) { 
+            return result;
+        }).length / maps[map].results.length * 100;
+    }
+    return maps;
+}
+
+/**
+ * Normalize mapname to remove de_, cs_, as_
+ * @param string mapName 
+ */
+function normalizeMap(mapName) {
+    return mapName.trim().toLowerCase().replace(/^(de|as|cs)_/, '');
+}
 
 /**
  * Transform matchJson object to collection/array, sorted by date
