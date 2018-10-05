@@ -239,6 +239,59 @@ exports.updateMatch = function(author, action, matchHash) {
 };
 
 /**
+ * Get map winrate.
+ *
+ * @param  author
+ * @param  action
+ *
+ * @return void
+ */
+exports.winRate = function (mapName = null) {
+    var maps = mapWins();
+    if (mapName) {
+        mapName = normalizeMap(mapName);
+        if (mapName === 'canals') {
+            return 'canals win rate: HUNDREDE PROCENT!!!';
+        }
+        if (maps[mapName] === undefined) {
+            return 'Found no matches on ' + mapName;
+        }
+        return mapName + ' win rate: ' + maps[mapName].winrate + '%';
+    } else {
+        var response = '```\n' + 'WIN RATES\n';
+        for (var map in maps) {
+            response += map + ': ' + maps[map].winrate + '%\n';
+        }
+        response += 'canals: HUNDREDE PROCENT!!!\n';
+        response += '```';
+        return response;
+    }
+};
+
+/**
+ * Find result and win rates for all maps
+ */
+function mapWins() {
+    var maps = {};
+    var matchJson = getMatchJson();
+    for (var hash in matchJson) {
+        if (matchJson[hash].result !== undefined && matchJson[hash].map !== undefined) {
+            if (maps[matchJson[hash].map] === undefined) {
+                maps[matchJson[hash].map] = { results: [] }; 
+            }
+            var result = matchJson[hash].result.split('-');
+            maps[matchJson[hash].map].results.push(parseInt(result[0]) > parseInt(result[1]));
+        }
+    }
+    for (var map in maps) {
+        maps[map].winrate = maps[map].results.filter(function (result) { 
+            return result;
+        }).length / maps[map].results.length * 100;
+    }
+    return maps;
+}
+
+/**
  * Normalize mapname to remove de_, cs_, as_
  * @param string mapName 
  */
