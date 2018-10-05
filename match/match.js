@@ -14,6 +14,7 @@ exports.getMatchHelp = function() {
         { name: 'match move <match hash> <date>', desc: 'move a match to a new time' },
         { name: 'match played <match hash> yes/no', desc: 'mark match as played' },
         { name: 'match result <match hash> <result>', desc: 'save result for the match' },
+        { name: 'match map <match hash> <mapname>', desc: 'save map played to match' },
         { name: 'match help', desc: 'get this help list' },
     ];
 
