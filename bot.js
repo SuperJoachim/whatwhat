@@ -257,7 +257,7 @@ client.on('message', message => {
             return;
         }
 
-        if (['add', 'remove', 'move', 'played', 'result'].indexOf(action) >= 0) {
+        if (['add', 'remove', 'move', 'played', 'result', 'map'].indexOf(action) >= 0) {
             if (!authorHasRole(message, 'Members')) {
                 respondToMessage(message, 'Sorry, members only.');
                 return;
@@ -281,6 +281,13 @@ client.on('message', message => {
             respondToMessage(message, '**' + action + '** is not a valid command. See !prac help');
         }
 
+        return;
+    }
+    
+    // !winrate
+    if (messageContent.indexOf('!winrate') > -1) {
+        var mapTxt = messageContent.replace('!winrate', '').trim().toLowerCase();
+        respondToMessage(message, match.winRate(mapTxt));
         return;
     }
 
