@@ -132,6 +132,26 @@ exports.updateMatches = function(action, args) {
         }
     }
 
+    if (action == 'map') {
+        var matchHash = args[1];
+        var mapName = args[2];
+
+        if (mapName) {
+            mapName = normalizeMap(mapName);
+        } else {
+            return 'No map given.';
+        }
+
+        if (matchJson[matchHash]) {
+            matchJson[matchHash].map = mapName;
+            updateMatchFile(matchJson);
+            response = 'Match **' + matchHash + '** has been updated!';
+        }
+        else {
+            response = 'Match **' + matchHash + '** not found!';
+        }
+    }
+
     return response;
 }
 
@@ -161,7 +181,9 @@ exports.getMatchSummary = function(archive = false) {
             });
 
             response = response + '```diff\n';
-            response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() + ' (hash: ' + matchData.hash + ') \n\n';
+            response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() 
+                + (matchData.map !== undefined ? ' @ ' + matchData.map.toUpperCase() : '') 
+                + ' (hash: ' + matchData.hash + ') \n\n';
 
             if (matchData.played && matchData.played == 'yes') {
                 response = response + 'Result: ' + matchData.result + '\n\n';
@@ -215,6 +237,14 @@ exports.updateMatch = function(author, action, matchHash) {
 
     return 'You said ' + action + '!';
 };
+
+/**
+ * Normalize mapname to remove de_, cs_, as_
+ * @param string mapName 
+ */
+function normalizeMap(mapName) {
+    return mapName.trim().toLowerCase().replace(/^(de|as|cs)_/, '');
+}
 
 /**
  * Transform matchJson object to collection/array, sorted by date
