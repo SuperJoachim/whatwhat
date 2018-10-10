@@ -12,9 +12,8 @@ exports.getMatchHelp = function() {
         { name: 'match add <date> <opponent>', desc: 'add a new match' },
         { name: 'match remove <match hash', desc: 'remove a match' },
         { name: 'match move <match hash> <date>', desc: 'move a match to a new time' },
-        { name: 'match played <match hash> yes/no', desc: 'mark match as played' },
         { name: 'match result <match hash> <result>', desc: 'save result for the match' },
-        { name: 'match map <match hash> <mapname>', desc: 'save map played to match' },
+        { name: 'match map <match hash> <mapname>', desc: 'save map to match' },
         { name: 'match help', desc: 'get this help list' },
     ];
 
@@ -43,7 +42,6 @@ exports.updateMatches = function(action, args) {
         matchJson[matchHash] = {
             'opponent': '' + matchOpponent + '',
             'date': '' + matchMoment.format('YYYY-MM-DDTHH:mm') + '',
-            'played': false,
             'result': '',
             'map': '',
             'players': {
@@ -84,28 +82,6 @@ exports.updateMatches = function(action, args) {
             matchJson[matchHash].date = matchMoment.format('YYYY-MM-DDTHH:mm');
             updateMatchFile(matchJson);
             response = 'Match **' + matchHash + '** has been moved!';
-        }
-        else {
-            response = 'Match **' + matchHash + '** not found!';
-        }
-    }
-
-    if (action == 'played') {
-        var matchHash = args[1];
-        var played = args[2];
-
-        if (played) {
-            played.trim();
-        }
-
-        if (!played || !(['yes', 'no'].indexOf(played) >= 0)) {
-            return 'Played can be true or false';
-        }
-
-        if (matchJson[matchHash]) {
-            matchJson[matchHash].played = played;
-            updateMatchFile(matchJson);
-            response = 'Match **' + matchHash + '** has been updated!';
         }
         else {
             response = 'Match **' + matchHash + '** not found!';
@@ -168,7 +144,10 @@ exports.getMatchSummary = function(archive = false) {
 
     if (matches && _.size(matches) > 0) {
         _.forEach(matches, function(matchData) {
-            if (matchData.played && !archive) {
+            if (matchData.result && !archive) {
+                return;
+            }
+            if (!matchData.result && archive) {
                 return;
             }
 
@@ -184,10 +163,10 @@ exports.getMatchSummary = function(archive = false) {
 
             response = response + '```diff\n';
             response = response + matchData.date + ' vs ' + matchData.opponent.toUpperCase() 
-                + (matchData.map !== undefined ? ' @ ' + matchData.map.toUpperCase() : '') 
+                + (matchData.map !== undefined && matchData.map ? ' @ ' + matchData.map.toUpperCase() : '') 
                 + ' (hash: ' + matchData.hash + ') \n\n';
 
-            if (matchData.played && matchData.played == 'yes') {
+            if (matchData.result) {
                 response = response + 'Result: ' + matchData.result + '\n\n';
             }
 
