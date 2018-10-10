@@ -257,7 +257,7 @@ client.on('message', message => {
             return;
         }
 
-        if (['add', 'remove', 'move', 'played', 'result', 'map'].indexOf(action) >= 0) {
+        if (['add', 'remove', 'move', 'result', 'map'].indexOf(action) >= 0) {
             if (!authorHasRole(message, 'Members')) {
                 respondToMessage(message, 'Sorry, members only.');
                 return;
