@@ -30,7 +30,8 @@ exports.getPracSummary = function() {
         _.forEach(pracToday, function(gamePrac, gameKey) {
             var yes = [];
             var no = [];
-            var maybe = [];
+            //var maybe = [];
+            var backup = [];
 
             _.forEach(gamePrac['yes'], function(player) {
                 yes.push(_.values(player)[0]);
@@ -38,15 +39,20 @@ exports.getPracSummary = function() {
             _.forEach(gamePrac['no'], function(player) {
                 no.push(_.values(player)[0]);
             });
-            _.forEach(gamePrac['maybe'], function(player) {
-                maybe.push(_.values(player)[0]);
+            _.forEach(gamePrac['backup'], function(player) {
+                backup.push(_.values(player)[0]);
             });
+            //_.forEach(gamePrac['maybe'], function(player) {
+            //    maybe.push(_.values(player)[0]);
+            //});
+
 
             response = response + '```diff\n';
             response = response + gameKey.toUpperCase() + '\n';
             response = response + '+ ' + yes.join(', ') + '\n';
             response = response + '- ' + no.join(', ') + '\n';
-            response = response + '--- maybe: ' + maybe.join(', ') + '\n';
+            response = response + '--- backup: ' + backup.join(', ') + '\n';
+            //response = response + '--- maybe: ' + maybe.join(', ') + '\n';
             response = response + '```';
         });
     }
@@ -165,7 +171,8 @@ exports.updatePrac = function(author, action, game) {
     }
 
     if (pracJson[today][game] == undefined) {
-        pracJson[today][game] = {"yes":[], "no":[], "maybe":[]};
+        pracJson[today][game] = {"yes":[], "no":[], "backup":[]};
+        //pracJson[today][game] = {"yes":[], "no":[], "maybe":[]};
     }
 
     // Check if exists.
@@ -179,7 +186,8 @@ exports.updatePrac = function(author, action, game) {
     _.remove(pracJson[today][game]['no'], function(e) {
         return Object.keys(e)[0] == userId;
     });
-    _.remove(pracJson[today][game]['maybe'], function(e) {
+    _.remove(pracJson[today][game]['backup'], function(e) {
+    //_.remove(pracJson[today][game]['maybe'], function(e) {
         return Object.keys(e)[0] == userId;
     });
 

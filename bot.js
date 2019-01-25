@@ -223,7 +223,8 @@ client.on('message', message => {
             return;
         }
 
-        if (action == 'yes' || action == 'no' || action == 'remove' || action == 'maybe') {
+        if (action == 'yes' || action == 'no' || action == 'remove' || action == 'backup') {
+        //if (action == 'yes' || action == 'no' || action == 'remove' || action == 'maybe') {
             respondToMessage(message, prac.updatePrac(message.author, action, game));
             respondToMessage(message, prac.getPracSummary());
         }
