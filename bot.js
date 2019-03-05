@@ -67,9 +67,6 @@ _.mixin({
  */
 client.on('ready', () => {
     console.log('I am ready!');
-    client.channels.every(channel => {
-        channel.sendMessage('HEJ NU ER JEG HER IGEN');
-    });
     //ClientUser.setStatus("online", "Din mor");
 });
 
