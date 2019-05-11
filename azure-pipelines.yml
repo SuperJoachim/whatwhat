@@ -17,11 +17,11 @@ steps:
 
 - script: |
     npm install
-    npm run build
-  displayName: 'npm install and build'
+  displayName: 'npm install'
 
 - script: |
     az acr login --name joscontainers
     docker build -t what .
     docker tag what joscontainers.azurecr.io/what/whatbot
     docker push joscontainers.azurecr.io/what/whatbot
+  displayName: 'building and pushing to container registry'
