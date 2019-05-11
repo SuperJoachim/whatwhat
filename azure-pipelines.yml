@@ -26,3 +26,4 @@ steps:
     repository: 'whatpipe'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
+    tags: latest
