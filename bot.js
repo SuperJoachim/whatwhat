@@ -10,17 +10,11 @@ var     fs              = require('fs');
 var     path            = require('path');
 var     uuid            = require('uuid/v1');
 var     request         = require('request');
-var     prac            = require('./prac/prac.js');
-var     match           = require('./match/match.js');
 var     rime            = require('./rime/rime.js');
 var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
 var     cmd             = require('node-cmd');
 var     ytdl            = require('ytdl-core');
-var     pracJsonPath    = './prac/prac.json';
-var     matchJsonPath   = './match/match.json';
-var     logJson         = './log/log.json';
-var     log             = require('./log/log.js');
 var     analimages      = require('./analytics/images.js');
 
 /**
@@ -34,23 +28,9 @@ const   babesfile       = botConfig.babePath;
 const   lastshownfile   = botConfig.lastShownImage;
 
 if (!fs.existsSync(imagePath)){
-    fs.mkdirSync(imagePath)
+    //fs.mkdirSync(imagePath)
 }
 
-if (!fs.existsSync(pracJsonPath)){
-    l('prac file created');
-    fs.writeFileSync(pracJsonPath, JSON.stringify({}));
-}
-
-if (!fs.existsSync(matchJsonPath)){
-    l('match file created');
-    fs.writeFileSync(matchJsonPath, JSON.stringify({}));
-}
-
-if (!fs.existsSync(logJson)){
-    l('log file created');
-    fs.writeFileSync(logJson, JSON.stringify({}));
-}
 
 _.mixin({
     isBlank: function(string) {
@@ -76,14 +56,6 @@ client.on('message', message => {
     }
 
     var messageContent = message.content.trim().toLowerCase();
-
-    log.log(message);
-
-    // !waste
-    if (messageContent.indexOf('!waste') > -1) {
-        respondToMessage(message, log.getWaste());
-        return;
-    }
 
     // !say
     if (messageContent.indexOf('!say') > -1) {
@@ -132,111 +104,6 @@ client.on('message', message => {
     if (messageContent.indexOf('!lol') > -1) {
         var imageToProcess = messageContent.replace('!lol ', '')
         respondToMessage(message, analimages.analyzeImage(imageToProcess));
-        return;
-    }
-
-    // !prac
-    if (messageContent.indexOf('!prac') > -1) {
-        var pracTxt = messageContent.replace('!prac', '').trim().toLowerCase();
-        var matches = pracTxt.match(/([\w+]+)/g);
-        var game = botConfig.defaultPracGame;
-        var action = null;
-
-        if (matches != undefined && matches[0] != undefined) {
-            action = matches[0];
-        }
-
-        if (matches != undefined && matches[1] != undefined) {
-            if (matches[1] && botConfig.pracGames.indexOf(matches[1]) > -1) {
-                game = matches[1];
-            }
-            else {
-                respondToMessage(message, 'Game is not valid. Available games are **' + botConfig.pracGames.join(', ') + '**. Default game is **' + botConfig.defaultPracGame + '**.');
-                return;
-            }
-        }
-
-        if (!action) {
-            respondToMessage(message, prac.getPracSummary());
-            return;
-        }
-
-        if (action == 'stats') {
-            respondToMessage(message, prac.getPracStats());
-            return;
-        }
-
-        if (action == 'server') {
-            respondToMessage(message, prac.getServer());
-            return;
-        }
-
-        if (action == 'help') {
-            respondToMessage(message, prac.getPracHelp());
-            return;
-        }
-
-        if (action == 'yes' || action == 'no' || action == 'remove') {
-            respondToMessage(message, prac.updatePrac(message.author, action, game));
-            respondToMessage(message, prac.getPracSummary());
-        }
-        else {
-            respondToMessage(message, '**' + action + '** is not a valid command. See !prac help');
-        }
-
-        return;
-    }
-
-    // !match
-    if (messageContent.indexOf('!match') > -1) {
-        var matchTxt = messageContent.replace('!match', '').trim().toLowerCase();
-        var matches = matchTxt.match(/([\w+]+)/g);
-        var args = matchTxt.split(' ');
-        var action = null;
-
-        if (matches != undefined && matches[0] != undefined) {
-            action = matches[0];
-        }
-
-        if (!action) {
-            respondToMessage(message, match.getMatchSummary());
-            return;
-        }
-
-        if (action == 'archive') {
-            respondToMessage(message, match.getMatchSummary(true));
-            return;
-        }
-
-        if (action == 'help') {
-            respondToMessage(message, match.getMatchHelp());
-            return;
-        }
-
-        if (['add', 'remove', 'move', 'played', 'result'].indexOf(action) >= 0) {
-            if (!authorHasRole(message, 'Members')) {
-                respondToMessage(message, 'Sorry, members only.');
-                return;
-            }
-
-            respondToMessage(message, match.updateMatches(action, args));
-            return;
-        }
-
-        if (action == 'yes' || action == 'no') {
-            if (!authorHasRole(message, 'Members')) {
-                respondToMessage(message, 'Sorry, members only.');
-                return;
-            }
-
-            matchHash = args[1];
-            respondToMessage(message, match.updateMatch(message.author, action, matchHash));
-            respondToMessage(message, match.getMatchSummary());
-        }
-        else {
-            respondToMessage(message, '**' + action + '** is not a valid command. See !prac help');
-        }
-
         return;
     }
 
@@ -382,13 +249,15 @@ client.on('message', message => {
 
     // whaat?
     if (messageContent === 'whaat?') {
+        message.channel.sendMessage("Prøver at sende lort");
         var path = imagePath;
 
         fs.readdir(path, function(err, items) {
             var billedeRandom = Math.floor(Math.random() * (items.length - 0 + 1));
             var billedeToSend = items[billedeRandom];
+            message.channel.sendMessage(billedeToSend);
             message.channel.sendFile(path + '/' + billedeToSend);
-            fs.writeFile(lastshownfile, path + billedeToSend);
+            //fs.writeFile(lastshownfile, path + billedeToSend);
         });
 
         return;
