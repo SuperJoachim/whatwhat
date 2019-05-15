@@ -500,6 +500,7 @@ rp(options).then(function (tokenResponse) {
 }).catch(function (err) {
     console.log(err)
 });
+console.log(secretBundle.value);
 //client.login(botConfig.token);
 
 /**
