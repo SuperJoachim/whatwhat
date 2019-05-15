@@ -25,7 +25,7 @@ var     tacs            = require('./tacs/tacs.js');
 var     call            = require('./call/call.js');
 var     analimages      = require('./analytics/images.js');
 var     rp              = require('request-promise');
-var     ak              = require('azure-keyvault');
+var     KeyVault        = require('azure-keyvault');
 
 
 /**
