@@ -4,7 +4,7 @@
   "token": "<your token>",
   "commandTrigger": "!",
   "imageUploadPath": "/aci/billeder",
-  "babePath": "C:\\whatbot\\babes.txt",
+  "babePath": "/aci/billeder/babes/babes.txt",
   "lastShownImage": "lastshown.txt",
   "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png", "webp"],
   "pracGames": ["cs", "pubg", "fortnite"],
