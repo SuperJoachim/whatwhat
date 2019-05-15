@@ -31,14 +31,9 @@ var     KeyVault        = require('azure-keyvault');
 const   Discord         = require('discord.js');
 const   client          = new Discord.Client();
 const   download        = require('download');
-const   imagePath       = path.join(botConfig.imageUploadPath + '\\');
+const   imagePath       = botConfig.imageUploadPath;
 const   babesfile       = botConfig.babePath;
 const   lastshownfile   = botConfig.lastShownImage;
-
-if (!fs.existsSync(imagePath)){
-    fs.mkdirSync(imagePath)
-}
-
 
 if (!fs.existsSync(logJson)){
     l('log file created');
@@ -290,15 +285,6 @@ client.on('message', message => {
         var babeRandom = Math.floor(Math.random() * (babes.length));
         var billede = babes[babeRandom];
         message.channel.sendFile(billede);
-
-        return;
-    }
-
-
-    // weryimpressive
-    if (messageContent === 'weryimpressive') {
-        message.channel.sendMessage("Opdaterer botten!");
-        cmd.run("powershell -file Deploy.ps1 ")
 
         return;
     }
