@@ -492,7 +492,7 @@ rp(options).then(function (tokenResponse) {
 
     client.getSecret(`https://whatkeys.vault.azure.net`, 'bottoken', '').then((secretBundle) => {
         console.log(`The secret value is: ${secretBundle.value}`)
-        client.login(secretBundle.value)
+        client.login(secretBundle.value);
     }).catch((err) => {
         console.log(err)
     });
