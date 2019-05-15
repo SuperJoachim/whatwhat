@@ -488,9 +488,9 @@ rp(options).then(function (tokenResponse) {
     };
 
     var credentials = new KeyVault.KeyVaultCredentials(authenticator);
-    var client = new KeyVault.KeyVaultClient(credentials);
+    var kvclient = new KeyVault.KeyVaultClient(credentials);
 
-    client.getSecret(`https://whatkeys.vault.azure.net`, 'bottoken', '').then((secretBundle) => {
+    kvclient.getSecret(`https://whatkeys.vault.azure.net`, 'bottoken', '').then((secretBundle) => {
         console.log(`The secret value is: ${secretBundle.value}`)
         console.log(secretBundle.value);
         client.login(secretBundle.value);
