@@ -1,6 +1,6 @@
 {
   "prefix": "bot",
-  "id": "<your bot id>",
+  "id": "326459579720269825",
   "token": "<your token>",
   "commandTrigger": "!",
   "imageUploadPath": "/aci/billeder",
