@@ -264,7 +264,7 @@ client.on('message', message => {
 
     // nuller
     if (messageContent.includes('nuller')) {
-        message.channel.sendFile("bc4b8784-f172-44c3-9aef-edbb4b0b496e.jpg");
+        message.channel.sendFile("/aci/billeder/bc4b8784-f172-44c3-9aef-edbb4b0b496e.jpg");
 
         return;
     }
