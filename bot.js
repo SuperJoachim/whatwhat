@@ -261,6 +261,7 @@ client.on('message', message => {
         return;
     }
 
+    
 
     // nuller
     if (messageContent.includes('nuller')) {
