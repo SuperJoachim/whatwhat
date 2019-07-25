@@ -261,7 +261,7 @@ client.on('message', message => {
         return;
     }
 
-    
+        
 
     // nuller
     if (messageContent.includes('nuller')) {
@@ -418,11 +418,6 @@ function authorHasRole(message, roleName = '') {
     return false;
 }
 
-/**
- * Check if value is numeric
- *
-  * @return boolean
- */
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
