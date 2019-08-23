@@ -290,6 +290,16 @@ client.on('message', message => {
         return;
     }
 
+    if(messageContent == 'er det fredag?'){
+        var today = new Date();
+        if(today.getDay() == 5) {
+            message.challenge.sendMessage("JA DET ER");
+        } else {
+            message.challenge.sendFile("Nej :(");
+        }
+        
+    }
+
      // wing
     if (messageContent === 'wing') {
         message.channel.sendMessage("wong");
