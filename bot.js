@@ -293,9 +293,9 @@ client.on('message', message => {
     if(messageContent == 'er det fredag?'){
         var today = new Date();
         if(today.getDay() == 5) {
-            message.challenge.sendMessage("JA DET ER");
+            message.channel.sendMessage("JA DET ER");
         } else {
-            message.challenge.sendMessage("Nej :(");
+            message.channel.sendMessage("Nej :(");
         }
         
     }
