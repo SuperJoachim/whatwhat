@@ -293,7 +293,7 @@ client.on('message', message => {
     if(messageContent == 'er det fredag?'){
         var today = new Date();
         if(today.getDay() == 5) {
-            message.channel.sendMessage("JA DET ER");
+            message.channel.sendMessage("YAS!! https://www.youtube.com/watch?v=6UzP4QPA5Kg");
         } else {
             message.channel.sendMessage("Nej :(");
         }
