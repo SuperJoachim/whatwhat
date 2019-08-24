@@ -295,7 +295,7 @@ client.on('message', message => {
         if(today.getDay() == 5) {
             message.challenge.sendMessage("JA DET ER");
         } else {
-            message.challenge.sendFile("Nej :(");
+            message.challenge.sendMessage("Nej :(");
         }
         
     }
