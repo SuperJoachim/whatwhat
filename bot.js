@@ -302,7 +302,7 @@ client.on('message', message => {
 
     if(messageContent == 'er det lan?'){
         var today = new Date();
-        if(today.getDay() === 17 || today.getDay() === 19 ) {
+        if(today.getDate() == 17 || today.getDate() == 19 ) {
             message.channel.sendMessage("YEEES");
             message.channel.sendFile("lanbitch.jpg")
         } else {
