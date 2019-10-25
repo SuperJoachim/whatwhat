@@ -302,11 +302,11 @@ client.on('message', message => {
 
     if(messageContent == 'er det lan?'){
         var today = new Date();
-        if(today.getDate() == 17 || today.getDate() == 19 || today.getDate() == 18  ) {
+        if(today.getDate() == 917 || today.getDate() == 919 || today.getDate() == 918  ) { //Fjernes før næste lan
             message.channel.sendMessage("YEEES");
             message.channel.sendFile("lanbitch.jpg")
         } else {
-            message.channel.sendMessage("Nej :( - snart bitches");
+            message.channel.sendMessage("Nej :( - intet planlagt.");
         }
         
     }
