@@ -4,7 +4,7 @@
   "description": "Yeah",
   "main": "run.js",
   "dependencies": {
-    "discord.js": "^9.0.2",
+    "discord.js": "^11.0.0",
     "download": "^6.2.5",
     "file-extension": "^3.1.2",
     "lodash": "^4.17.5",
