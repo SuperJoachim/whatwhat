@@ -272,7 +272,7 @@ client.on('message', message => {
 
     // Pedesyge
     if (messageContent.includes('pede syge')) {
-        message.channel.sendFile("/aci/34594fc0-d38c-11e7-99f3-b3f9496a671a.jpg");
+        message.channel.sendFile("/aci/billeder/34594fc0-d38c-11e7-99f3-b3f9496a671a.jpg");
 
         return;
     }
