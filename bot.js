@@ -7,13 +7,10 @@ var     botConfig       = require('./config/bot.json');
  * Requires
  */
 var     fs              = require('fs');
-var     path            = require('path');
 var     uuid            = require('uuid/v1');
-var     request         = require('request');
 var     rime            = require('./rime/rime.js');
 var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
-var     cmd             = require('node-cmd');
 var     ytdl            = require('ytdl-core');
 
 var     logJson         = './log/log.json';
@@ -21,6 +18,7 @@ var     log             = require('./log/log.js');
 var     tacs            = require('./tacs/tacs.js');
 var     call            = require('./call/call.js');
 var     analimages      = require('./analytics/images.js');
+var     csserver        = require('./csserver/pracserver.js');
 var     rp              = require('request-promise');
 var     KeyVault        = require('azure-keyvault');
 
@@ -34,6 +32,16 @@ const   download        = require('download');
 const   imagePath       = botConfig.imageUploadPath;
 const   babesfile       = botConfig.babePath;
 const   lastshownfile   = botConfig.lastShownImage;
+const { DefaultAzureCredential } = require("@azure/identity");
+const { SecretClient } = require("@azure/keyvault-secrets");
+const kvcredential = new DefaultAzureCredential();
+const vaultName = "whatkeys";
+const kvurl = `https://${vaultName}.vault.azure.net`;
+
+const kvclient = new SecretClient(kvurl, kvcredential);
+
+const secretName = "bottoken";
+
 
 if (!fs.existsSync(logJson)){
     l('log file created');
@@ -158,7 +166,19 @@ client.on('message', message => {
             .then(function(description) {
                 respondToMessage(message, description);
             })
-            .catch(function(error) {});
+            .catch(function() {});
+
+        return;
+    }
+
+    // !sererinfo
+    if (messageContent.indexOf('!serverinfo') > -1) {
+
+        csserver.serverStatus("kage")
+            .then(function(description) {
+                respondToMessage(message, description);
+            })
+            .catch(function() {});
 
         return;
     }
@@ -360,46 +380,27 @@ client.on('message', message => {
             .then(function(description) {
                 respondToMessage(message, description);
             })
-            .catch(function(error) {});
+            .catch(function() {});
 
         download(messageContent).then(data => {
             fs.writeFileSync(localPath, data);
         });
 
         respondToMessage(message, 'Billede uploadet');
-    }
-});
+    }});
 
-// Log our bot in
-var options = {
-    uri: 'http://169.254.169.254/metadata/identity/oauth2/token',
-    qs: {
-        'api-version': '2018-02-01',
-        'resource': 'https://vault.azure.net',
-    },
-    headers: {
-        'Metadata': 'true'
-    },
-    json: true // Automatically parses the JSON string in the response
-};
+    async function main() {
+        const latestSecret = await kvclient.getSecret(secretName);
+        console.log(`Latest version of the secret ${secretName}: `, latestSecret);
+        const specificSecret = await kvclient.getSecret(secretName);
+        //console.log(`The secret ${secretName} at the version ${latestSecret.version!}: `, specificSecret);
+        kvclient.login(specificSecret);
+      }
+      
+      main();
 
-rp(options).then(function (tokenResponse) {
-    var authenticator = function (challenge, callback) {
-        var authorizationValue = tokenResponse.token_type + ' ' + tokenResponse.access_token;
-        return callback(null, authorizationValue);
-    };
+//client.login(secretBundle.value);
 
-    var credentials = new KeyVault.KeyVaultCredentials(authenticator);
-    var kvclient = new KeyVault.KeyVaultClient(credentials);
-
-    kvclient.getSecret(`https://whatkeys.vault.azure.net`, 'bottoken', '').then((secretBundle) => {
-        client.login(secretBundle.value);
-    }).catch((err) => {
-        console.log(err)
-    });
-}).catch(function (err) {
-    console.log(err)
-});
 //client.login(botConfig.token);
 
 /**
@@ -438,23 +439,6 @@ function respondToMessageTTS(message, response) {
     message.channel.sendMessage(response, { tts: true });
 }
 
-/**
- * Check if the message author has a specific role.
- *
- * @param  Message  message
- * @param  string   roleName
- *
- * @return boolean
- */
-function authorHasRole(message, roleName = '') {
-    let role = message.guild.roles.find('name', roleName);
-
-    if (message.member.roles.has(role.id)) {
-        return true;
-    }
-
-    return false;
-}
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
