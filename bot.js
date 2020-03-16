@@ -37,10 +37,20 @@ const { SecretClient } = require("@azure/keyvault-secrets");
 const kvcredential = new DefaultAzureCredential();
 const vaultName = "whatkeys";
 const kvurl = `https://${vaultName}.vault.azure.net`;
-
 const kvclient = new SecretClient(kvurl, kvcredential);
-
 const secretName = "bottoken";
+
+//Login - brug secret fra KV
+async function logindiscord() {
+    const discordToken = await kvclient.getSecret(secretName);
+    client.login(discordToken.value);
+  }
+
+  async function getDathostPW() {
+    const getDathost = await kvclient.getSecret("dathostpw");
+    return getDathost.value;
+  }
+
 
 
 if (!fs.existsSync(logJson)){
@@ -171,17 +181,18 @@ client.on('message', message => {
         return;
     }
 
-    // !sererinfo
-    if (messageContent.indexOf('!serverinfo') > -1) {
-
-        csserver.serverStatus("kage")
-            .then(function(description) {
-                respondToMessage(message, description);
+    // !serverinfo
+    if (messageContent === '!serverinfo') {
+        csserver.serverStatus(getDathostPW())
+            .then(function(retursvar) {
+                respondToMessage(message, "LOL");
+                //respondToMessage(message, retursvar);
             })
             .catch(function() {});
 
         return;
     }
+
 
 
 
@@ -389,20 +400,6 @@ client.on('message', message => {
         respondToMessage(message, 'Billede uploadet');
     }});
 
-    async function main() {
-        const latestSecret = await kvclient.getSecret(secretName);
-        console.log(`Latest version of the secret ${secretName}: `, latestSecret);
-        const specificSecret = await kvclient.getSecret(secretName);
-        //console.log(`The secret ${secretName} at the version ${latestSecret.version!}: `, specificSecret);
-        kvclient.login(specificSecret);
-      }
-      
-      main();
-
-//client.login(secretBundle.value);
-
-//client.login(botConfig.token);
-
 /**
  * Respond to a message with a file
  *
@@ -454,3 +451,5 @@ function isNumeric(n) {
 function l(data) {
     console.log(data);
 }
+
+logindiscord();
