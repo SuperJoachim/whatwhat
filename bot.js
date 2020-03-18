@@ -18,10 +18,7 @@ var     log             = require('./log/log.js');
 var     tacs            = require('./tacs/tacs.js');
 var     call            = require('./call/call.js');
 var     analimages      = require('./analytics/images.js');
-var     csserver        = require('./csserver/pracserver.js');
 var     rp              = require('request-promise');
-var     KeyVault        = require('azure-keyvault');
-
 
 /**
  * Constants
@@ -46,10 +43,6 @@ async function logindiscord() {
     client.login(discordToken.value);
   }
 
-  async function getDathostPW() {
-    const getDathost = await kvclient.getSecret("dathostpw");
-    return getDathost.value;
-  }
 
 
 
@@ -84,6 +77,97 @@ client.on('message', message => {
     var messageContent = message.content.trim().toLowerCase();
 
     log.log(message);
+
+    
+//Serverstats
+async function datServerinfo() {
+    const dathostpw = await kvclient.getSecret("dathostpw");
+    var options = {
+        method: 'GET',
+        uri: 'https://dathost.net/api/0.1/game-servers/5e6e4a382893cbf723df4786',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        auth: {
+            username: 'joachim@stapelfeldt.com',
+            password: dathostpw.value
+        },
+        body: {
+            'server_id': "5e6e4a382893cbf723df4786"
+        },
+        json: true
+    };
+    
+    return new Promise(function(resolve, reject) {
+        rp(options)
+            .then(function (parsedBody) {
+                var returnMsg = '**Server IP:** ';
+                
+                console.log(parsedBody);
+                resolve(returnMsg);
+                returnMsg += parsedBody.custom_domain + ":" + parsedBody.ports.game + "\n**Antal spillere:** " + parsedBody.players_online + "\n**Rcon:** " + parsedBody.csgo_settings.rcon + "\n**Serverpassword:** " + parsedBody.csgo_settings.password + "\n**Server tændt:** " + parsedBody.on.toString()
+                message.channel.sendMessage(returnMsg)
+            })
+            .catch(function (err) {
+                console.log('FEJL', err);
+                reject(err);
+                message.channel.sendMessage("LORTET VIRKER næsten!!")
+            });
+    });
+    
+}
+
+    // !serverinfo
+    if (messageContent === '!serverinfo') {
+
+        datServerinfo();
+}
+
+
+
+
+//Serverstart
+async function datStartserver() {
+    const dathostpw = await kvclient.getSecret("dathostpw");
+    var options = {
+        method: 'POST',
+        uri: 'https://dathost.net/api/0.1/game-servers/5e6e4a382893cbf723df4786/start',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        auth: {
+            username: 'joachim@stapelfeldt.com',
+            password: dathostpw.value
+        },
+        body: {
+            'server_id': "5e6e4a382893cbf723df4786"
+        },
+        json: true
+    };
+    
+    return new Promise(function(resolve, reject) {
+        rp(options)
+            .then(function (parsedBody) {
+                  
+                console.log(parsedBody);
+                message.channel.sendMessage("Serveren booter - kan gå 3-4 min.")
+            })
+            .catch(function (err) {
+                console.log('FEJL', err);
+                reject(err);
+                message.channel.sendMessage("LORTET VIRKER næsten!!")
+            });
+    });
+    
+}
+
+    // !startserver
+    if (messageContent === '!startserver') {
+
+        datStartserver();
+}
+
+
 
     // !call
     if (messageContent.indexOf('!call') > -1) {
@@ -181,17 +265,6 @@ client.on('message', message => {
         return;
     }
 
-    // !serverinfo
-    if (messageContent === '!serverinfo') {
-        csserver.serverStatus(getDathostPW())
-            .then(function(retursvar) {
-                respondToMessage(message, "LOL");
-                //respondToMessage(message, retursvar);
-            })
-            .catch(function() {});
-
-        return;
-    }
 
 
 
