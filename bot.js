@@ -82,18 +82,20 @@ client.on('message', message => {
 //Serverstats
 async function datServerinfo() {
     const dathostpw = await kvclient.getSecret("dathostpw");
+    const dathostemail = await kvclient.getSecret("dathostemail");
+    const dathostserverid = await kvclient.getSecret("dathostserverid");
     var options = {
         method: 'GET',
-        uri: 'https://dathost.net/api/0.1/game-servers/5e6e4a382893cbf723df4786',
+        uri: 'https://dathost.net/api/0.1/game-servers/' + dathostserverid.value,
         headers: {
             'Content-Type': 'application/json'
         },
         auth: {
-            username: 'joachim@stapelfeldt.com',
+            username: dathostemail.value,
             password: dathostpw.value
         },
         body: {
-            'server_id': "5e6e4a382893cbf723df4786"
+            'server_id': dathostserverid.value
         },
         json: true
     };
@@ -129,18 +131,20 @@ async function datServerinfo() {
 //Serverstart
 async function datStartserver() {
     const dathostpw = await kvclient.getSecret("dathostpw");
+    const dathostemail = await kvclient.getSecret("dathostemail");
+    const dathostserverid = await kvclient.getSecret("dathostserverid");
     var options = {
         method: 'POST',
-        uri: 'https://dathost.net/api/0.1/game-servers/5e6e4a382893cbf723df4786/start',
+        uri: 'https://dathost.net/api/0.1/game-servers/' + dathostserverid.value + '/start',
         headers: {
             'Content-Type': 'application/json'
         },
         auth: {
-            username: 'joachim@stapelfeldt.com',
+            username: dathostemail.value,
             password: dathostpw.value
         },
         body: {
-            'server_id': "5e6e4a382893cbf723df4786"
+            'server_id': dathostserverid.value
         },
         json: true
     };
