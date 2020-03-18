@@ -16,7 +16,8 @@
     "uuid": "^3.2.1",
     "ytdl-core": "^0.20.0",
     "request-promise": "^4.2.2",
-    "azure-keyvault": "^3.0.4"
+    "@azure/identity": "1.1.0-preview1",
+    "@azure/keyvault-secrets": "^4.0.2"
   },
   "devDependencies": {},
   "scripts": {

@@ -7,13 +7,10 @@ var     botConfig       = require('./config/bot.json');
  * Requires
  */
 var     fs              = require('fs');
-var     path            = require('path');
 var     uuid            = require('uuid/v1');
-var     request         = require('request');
 var     rime            = require('./rime/rime.js');
 var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
-var     cmd             = require('node-cmd');
 var     ytdl            = require('ytdl-core');
 
 var     logJson         = './log/log.json';
@@ -22,8 +19,6 @@ var     tacs            = require('./tacs/tacs.js');
 var     call            = require('./call/call.js');
 var     analimages      = require('./analytics/images.js');
 var     rp              = require('request-promise');
-var     KeyVault        = require('azure-keyvault');
-
 
 /**
  * Constants
@@ -34,6 +29,22 @@ const   download        = require('download');
 const   imagePath       = botConfig.imageUploadPath;
 const   babesfile       = botConfig.babePath;
 const   lastshownfile   = botConfig.lastShownImage;
+const { DefaultAzureCredential } = require("@azure/identity");
+const { SecretClient } = require("@azure/keyvault-secrets");
+const kvcredential = new DefaultAzureCredential();
+const vaultName = "whatkeys";
+const kvurl = `https://${vaultName}.vault.azure.net`;
+const kvclient = new SecretClient(kvurl, kvcredential);
+const secretName = "bottoken";
+
+//Login - brug secret fra KV
+async function logindiscord() {
+    const discordToken = await kvclient.getSecret(secretName);
+    client.login(discordToken.value);
+  }
+
+
+
 
 if (!fs.existsSync(logJson)){
     l('log file created');
@@ -66,6 +77,97 @@ client.on('message', message => {
     var messageContent = message.content.trim().toLowerCase();
 
     log.log(message);
+
+    
+//Serverstats
+async function datServerinfo() {
+    const dathostpw = await kvclient.getSecret("dathostpw");
+    var options = {
+        method: 'GET',
+        uri: 'https://dathost.net/api/0.1/game-servers/5e6e4a382893cbf723df4786',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        auth: {
+            username: 'joachim@stapelfeldt.com',
+            password: dathostpw.value
+        },
+        body: {
+            'server_id': "5e6e4a382893cbf723df4786"
+        },
+        json: true
+    };
+    
+    return new Promise(function(resolve, reject) {
+        rp(options)
+            .then(function (parsedBody) {
+                var returnMsg = '**Server IP:** ';
+                
+                console.log(parsedBody);
+                resolve(returnMsg);
+                returnMsg += parsedBody.custom_domain + ":" + parsedBody.ports.game + "\n**Antal spillere:** " + parsedBody.players_online + "\n**Rcon:** " + parsedBody.csgo_settings.rcon + "\n**Serverpassword:** " + parsedBody.csgo_settings.password + "\n**Server tændt:** " + parsedBody.on.toString()
+                message.channel.sendMessage(returnMsg)
+            })
+            .catch(function (err) {
+                console.log('FEJL', err);
+                reject(err);
+                message.channel.sendMessage("LORTET VIRKER næsten!!")
+            });
+    });
+    
+}
+
+    // !serverinfo
+    if (messageContent === '!serverinfo') {
+
+        datServerinfo();
+}
+
+
+
+
+//Serverstart
+async function datStartserver() {
+    const dathostpw = await kvclient.getSecret("dathostpw");
+    var options = {
+        method: 'POST',
+        uri: 'https://dathost.net/api/0.1/game-servers/5e6e4a382893cbf723df4786/start',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        auth: {
+            username: 'joachim@stapelfeldt.com',
+            password: dathostpw.value
+        },
+        body: {
+            'server_id': "5e6e4a382893cbf723df4786"
+        },
+        json: true
+    };
+    
+    return new Promise(function(resolve, reject) {
+        rp(options)
+            .then(function (parsedBody) {
+                  
+                console.log(parsedBody);
+                message.channel.sendMessage("Serveren booter - kan gå 3-4 min.")
+            })
+            .catch(function (err) {
+                console.log('FEJL', err);
+                reject(err);
+                message.channel.sendMessage("LORTET VIRKER næsten!!")
+            });
+    });
+    
+}
+
+    // !startserver
+    if (messageContent === '!startserver') {
+
+        datStartserver();
+}
+
+
 
     // !call
     if (messageContent.indexOf('!call') > -1) {
@@ -158,10 +260,12 @@ client.on('message', message => {
             .then(function(description) {
                 respondToMessage(message, description);
             })
-            .catch(function(error) {});
+            .catch(function() {});
 
         return;
     }
+
+
 
 
 
@@ -360,47 +464,14 @@ client.on('message', message => {
             .then(function(description) {
                 respondToMessage(message, description);
             })
-            .catch(function(error) {});
+            .catch(function() {});
 
         download(messageContent).then(data => {
             fs.writeFileSync(localPath, data);
         });
 
         respondToMessage(message, 'Billede uploadet');
-    }
-});
-
-// Log our bot in
-var options = {
-    uri: 'http://169.254.169.254/metadata/identity/oauth2/token',
-    qs: {
-        'api-version': '2018-02-01',
-        'resource': 'https://vault.azure.net',
-    },
-    headers: {
-        'Metadata': 'true'
-    },
-    json: true // Automatically parses the JSON string in the response
-};
-
-rp(options).then(function (tokenResponse) {
-    var authenticator = function (challenge, callback) {
-        var authorizationValue = tokenResponse.token_type + ' ' + tokenResponse.access_token;
-        return callback(null, authorizationValue);
-    };
-
-    var credentials = new KeyVault.KeyVaultCredentials(authenticator);
-    var kvclient = new KeyVault.KeyVaultClient(credentials);
-
-    kvclient.getSecret(`https://whatkeys.vault.azure.net`, 'bottoken', '').then((secretBundle) => {
-        client.login(secretBundle.value);
-    }).catch((err) => {
-        console.log(err)
-    });
-}).catch(function (err) {
-    console.log(err)
-});
-//client.login(botConfig.token);
+    }});
 
 /**
  * Respond to a message with a file
@@ -438,23 +509,6 @@ function respondToMessageTTS(message, response) {
     message.channel.sendMessage(response, { tts: true });
 }
 
-/**
- * Check if the message author has a specific role.
- *
- * @param  Message  message
- * @param  string   roleName
- *
- * @return boolean
- */
-function authorHasRole(message, roleName = '') {
-    let role = message.guild.roles.find('name', roleName);
-
-    if (message.member.roles.has(role.id)) {
-        return true;
-    }
-
-    return false;
-}
 
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -470,3 +524,5 @@ function isNumeric(n) {
 function l(data) {
     console.log(data);
 }
+
+logindiscord();
