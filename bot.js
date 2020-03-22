@@ -12,6 +12,7 @@ var     rime            = require('./rime/rime.js');
 var     _               = require('lodash');
 var     fileExtension   = require('file-extension');
 var     ytdl            = require('ytdl-core');
+var     moment          = require('moment');
 
 var     logJson         = './log/log.json';
 var     log             = require('./log/log.js');
@@ -113,7 +114,7 @@ async function datServerinfo() {
             .catch(function (err) {
                 console.log('FEJL', err);
                 reject(err);
-                message.channel.sendMessage("LORTET VIRKER næsten!!")
+                message.channel.sendMessage("Fejl ved serverinfo :(")
             });
     });
     
@@ -159,7 +160,7 @@ async function datStartserver() {
             .catch(function (err) {
                 console.log('FEJL', err);
                 reject(err);
-                message.channel.sendMessage("LORTET VIRKER næsten!!")
+                message.channel.sendMessage("Fejl ved start af serer :(")
             });
     });
     
@@ -431,7 +432,11 @@ async function datStartserver() {
             message.channel.sendMessage("YEEES");
             message.channel.sendFile("lanbitch.jpg")
         } else {
-            message.channel.sendMessage("Nej :( - intet planlagt.");
+            var now = moment();
+            var b = moment([2020, 4, 29]);
+            var toLan = now.diff(b, 'days');
+            var toLanOut = toLan * -1;
+            message.channel.sendMessage("Nej :( - der er " + toLanOut + " dage til! WOUUUU");
         }
         
     }
