@@ -467,7 +467,7 @@ async function datStartserver() {
 
     if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1) {
         var billedenavn = uuid() + '.' + imageExtension;
-        var localPath = imagePath + billedenavn;
+        var localPath = imagePath + "/" + billedenavn;
 
         download(messageContent).then(data => {
             fs.writeFileSync(localPath, data);
