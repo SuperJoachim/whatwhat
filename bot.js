@@ -469,14 +469,9 @@ async function datStartserver() {
         var billedenavn = uuid() + '.' + imageExtension;
         var localPath = imagePath + billedenavn;
 
-        analimages.analyzeImage(messageContent)
-            .then(function(description) {
-                respondToMessage(message, description);
-            })
-            .catch(function() {});
-
         download(messageContent).then(data => {
             fs.writeFileSync(localPath, data);
+            console.log("Billede uploadet til " + localPath)
         });
 
         respondToMessage(message, 'Billede uploadet');
