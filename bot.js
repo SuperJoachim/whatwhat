@@ -339,7 +339,7 @@ async function datStartserver() {
 
     // what?
     if (messageContent === 'what?') {
-        respondToMessage(message, 'https://www.youtube.com/watch?v=jC1s3c-sFF8');
+        respondToMessage(message, 'https://www.youtube.com/watch?v=isujdfWGqss');
 
         return;
     }
