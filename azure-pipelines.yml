@@ -22,7 +22,7 @@ steps:
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'WhatRegistry'
+    containerRegistry: 'WhatContainers'
     repository: 'what/whatbot'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
