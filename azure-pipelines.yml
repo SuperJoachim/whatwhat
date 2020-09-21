@@ -27,3 +27,10 @@ steps:
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
     tags: latest
+
+- task: KubernetesManifest@0
+  inputs:
+    action: 'deploy'
+    kubernetesServiceConnection: 'whatks'
+    namespace: 'default'
+    manifests: '*'
