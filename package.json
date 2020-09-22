@@ -17,11 +17,14 @@
     "ytdl-core": "^0.20.0",
     "request-promise": "^4.2.2",
     "@azure/identity": "1.1.0-preview1",
-    "@azure/keyvault-secrets": "^4.0.2"
+    "@azure/keyvault-secrets": "^4.0.2",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "keywords": [
     "Discord",
@@ -29,5 +32,6 @@
     "quote"
   ],
   "author": "Bubber",
-  "license": "ISC"
+  "license": "ISC",
+  "snyk": true
 }
