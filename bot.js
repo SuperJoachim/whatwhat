@@ -461,7 +461,7 @@ async function datStartserver() {
             message.channel.sendFile("lanbitch.jpg")
         } else {
             var now = moment();
-            var b = moment([2020, 4, 29]);
+            var b = moment([2020, 11, 13]);
             var toLan = now.diff(b, 'days');
             var toLanOut = toLan * -1;
             message.channel.sendMessage("Nej :( - der er " + toLanOut + " dage til! WOUUUU");
@@ -500,6 +500,10 @@ async function datStartserver() {
         download(messageContent).then(data => {
             fs.writeFileSync(localPath, data);
             console.log("Billede uploadet til " + localPath)
+        }).catch(function (err) {
+            console.log('FEJL', err);
+            reject(err);
+            message.channel.sendMessage("Fejl ved upload af billede :(")
         });
 
         respondToMessage(message, 'Billede uploadet');
