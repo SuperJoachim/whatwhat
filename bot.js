@@ -18,8 +18,8 @@ var     logJson         = './log/log.json';
 var     log             = require('./log/log.js');
 var     tacs            = require('./tacs/tacs.js');
 var     call            = require('./call/call.js');
-var     analimages      = require('./analytics/images.js');
 var     rp              = require('request-promise');
+
 
 /**
  * Constants
@@ -32,6 +32,9 @@ const   babesfile       = botConfig.babePath;
 const   lastshownfile   = botConfig.lastShownImage;
 const { DefaultAzureCredential } = require("@azure/identity");
 const { SecretClient } = require("@azure/keyvault-secrets");
+const { url } = require('inspector');
+const ComputerVisionClient = require('@azure/cognitiveservices-computervision').ComputerVisionClient;
+const ApiKeyCredentials = require('@azure/ms-rest-js').ApiKeyCredentials;
 const kvcredential = new DefaultAzureCredential();
 const vaultName = "whatkeys";
 const kvurl = `https://${vaultName}.vault.azure.net`;
@@ -120,12 +123,54 @@ async function datServerinfo() {
     
 }
 
+
+//Analyze face
+if (messageContent.indexOf('!faceit') > -1) {
+    var imageToProcess = messageContent.replace('!faceit ', '')
+    guessAge(imageToProcess)
+}
+
+
+async function guessAge(urlToAnalyze) {
+    
+    const ApiKeyCredentialz = await kvclient.getSecret("facekey");
+    const ApiKeyEndpoint = await kvclient.getSecret("faceendpoint");
+    const computerVisionClient = new ComputerVisionClient(
+        new ApiKeyCredentials({ inHeader: { 'Ocp-Apim-Subscription-Key': ApiKeyCredentialz.value } }), ApiKeyEndpoint.value);
+    const caption = (await computerVisionClient.describeImage(urlToAnalyze)).captions[0];
+    const faces = (await computerVisionClient.analyzeImage(urlToAnalyze, { visualFeatures: ['Faces'] })).faces;
+    //console.log(`This may be ${caption.text} (${caption.confidence.toFixed(2)} confidence)`);
+    message.channel.sendMessage(caption.text);
+    if (faces.length) {
+        Kon = "udefinerbar størrelse";
+        Kon1 = "hen";
+        
+        for (const face of faces) {
+            console.log(face.gender.toString())
+            const Gend = face.gender.toString();
+            console.log(Gend);
+            if(Gend === "Male")
+            {
+                console.log("DET VAR EN MAND");
+                Kon = "mand";
+                Kon1 = "han";
+            } 
+            else
+            {
+                console.log("DET VAR IKKE EN MAND");
+                Kon = "kvinde";
+                Kon1 = "hun";
+            }
+            message.channel.sendMessage(`Det ligner ${Kon1} er ${face.age} år gammel og er helt klart en ${Kon}!`)
+        }
+      } else { console.log('No faces found.'); }
+}
+
     // !serverinfo
     if (messageContent === '!serverinfo') {
 
         datServerinfo();
 }
-
 
 
 
@@ -256,23 +301,6 @@ async function datStartserver() {
 
         return;
     }
-
-    // !anal
-    if (messageContent.indexOf('!anal') > -1) {
-        var imageToProcess = messageContent.replace('!anal ', '')
-
-        analimages.analyzeImage(imageToProcess)
-            .then(function(description) {
-                respondToMessage(message, description);
-            })
-            .catch(function() {});
-
-        return;
-    }
-
-
-
-
 
     // what what?
     if (messageContent === 'what what?') {
