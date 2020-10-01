@@ -493,7 +493,7 @@ async function datStartserver() {
     // image upload
     var imageExtension = fileExtension(messageContent);
 
-    if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1) {
+    if (imageExtension && botConfig.imageMimetypes.indexOf(imageExtension) > -1 && !messageContent.includes("faceit")) {
         var billedenavn = uuid() + '.' + imageExtension;
         var localPath = imagePath + "/" + billedenavn;
 
