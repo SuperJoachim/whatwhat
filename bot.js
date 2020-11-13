@@ -456,7 +456,7 @@ async function datStartserver() {
 
     if(messageContent == 'er det lan?'){
         var today = new Date();
-        if(today.getDate() == 917 || today.getDate() == 919 || today.getDate() == 918  ) { //Fjernes før næste lan
+        if(today.getDate() == 13 || today.getDate() == 14 || today.getDate() == 15  ) { //Fjernes før næste lan
             message.channel.sendMessage("YEEES");
             message.channel.sendFile("lanbitch.jpg")
         } else {
