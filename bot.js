@@ -456,7 +456,7 @@ async function datStartserver() {
 
     if(messageContent == 'er det lan?'){
         var today = new Date();
-        if(today.getDate() == 13 || today.getDate() == 14 || today.getDate() == 15  ) { //Fjernes før næste lan
+        if(today.getDate() == 1003 || today.getDate() == 1994 || today.getDate() == 1995  ) { //Fjernes før næste lan
             message.channel.sendMessage("YEEES");
             message.channel.sendFile("lanbitch.jpg")
         } else {
@@ -464,7 +464,8 @@ async function datStartserver() {
             var b = moment([2020, 11, 13]);
             var toLan = now.diff(b, 'days');
             var toLanOut = toLan * -1;
-            message.channel.sendMessage("Nej :( - der er " + toLanOut + " dage til! WOUUUU");
+            message.channel.sendMessage("Nej.. Hold kæft");
+            //message.channel.sendMessage("Nej :( - der er " + toLanOut + " dage til! WOUUUU");
         }
         
     }
