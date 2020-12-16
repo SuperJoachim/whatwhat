@@ -379,6 +379,15 @@ async function datStartserver() {
         return;
     }
 
+
+        // undying
+        if (messageContent.includes('undying')) {
+            respondToMessage(message, 'https://cdn.discordapp.com/attachments/215050766174388224/788391628401803314/7a9.jpg');
+    
+            return;
+        }
+    
+
     // agge
     if (messageContent === 'agge?!') {
         respondToMessageTTS(message, _.fill(Array(50), 'agge').join(' '));
