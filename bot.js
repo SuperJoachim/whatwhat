@@ -309,6 +309,13 @@ async function datStartserver() {
         return;
     }
 
+    // Kan martin drikke?
+    if (messageContent.includes('10')) {
+        respondToMessage(message, '10 - sjov historie! Det er mindre end Martin kan drikke!');
+
+        return;
+    }
+
     // rcon cmd
     if (messageContent.indexOf('!rcon') > -1) {
 
