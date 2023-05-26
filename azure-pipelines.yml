@@ -22,15 +22,8 @@ steps:
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'WhatContainers'
+    containerRegistry: 'WhatRegistry'
     repository: 'what/whatbot'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
     tags: latest
-
-- task: KubernetesManifest@0
-  inputs:
-    action: 'deploy'
-    kubernetesServiceConnection: 'whatks'
-    namespace: 'default'
-    manifests: '*'
