@@ -311,7 +311,7 @@ async function datStartserver() {
 
     // Kan martin drikke?
     if (messageContent.includes('10')) {
-        respondToMessage(message, '10 - sjov historie - tihii.. Det er mindre end Martin kan drikke!');
+        respondToMessage(message, '10 - sjov historie - tihii.. Det er mere end Martin kan drikke!');
 
         return;
     }
