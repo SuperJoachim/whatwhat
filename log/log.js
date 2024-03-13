@@ -131,7 +131,13 @@ function jsonIsValid(json) {
  * get the fucking JSON
  */
 function getLogJson() {
-    return require('./log.json');
+    var json = {}
+    try {
+        json = require('./log.json');
+    } catch (e) {
+        json = {};
+    }
+    return json
 }
 
 /**
