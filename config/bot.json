@@ -7,7 +7,12 @@
   "babePath": "/aci/billeder/babes/babes.txt",
   "lastShownImage": "lastshown.txt",
   "imageMimetypes": ["jpg", "jpeg", "png", "gif", "png", "webp"],
-  "pracGames": ["cs", "pubg", "fortnite"],
+  "pracGames": [
+    "cs",
+    "pubg",
+    "fortnite",
+    "helldive"
+  ],
   "defaultPracGame": "cs",
   "csgoserver": "<your csgo server ip>",
   "rcon": "<your rcon password>",
